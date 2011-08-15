@@ -1,0 +1,23 @@
+{% extends "exploration/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% spaceless %}
+{% if group %}
+    {% blocktrans with group.name as group_name %}Knowledge Base for {{ group_name }}{% endblocktrans %}
+{% else %}
+    {% trans "Knowledge Base" %}
+{% endif %}
+{% endspaceless %}{% endblock %}
+
+{% block body %}
+
+<h1>{% spaceless %}
+{% if group %}
+    {% blocktrans with group.get_absolute_url as group_url and group.name as group_name %}Knowledge Base for <a href="{{ group_url }}">{{ group_name }}</a>{% endblocktrans %}
+{% else %}
+    {% trans "Knowledge Base" %}
+{% endif %}
+{% endspaceless %}</h1>
+
+{% endblock %}
