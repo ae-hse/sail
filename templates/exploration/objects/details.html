@@ -1,0 +1,23 @@
+{% extends "exploration/base.html" %}
+
+{% load group_tags %}
+
+{% block body %}
+
+<h1>{{ object.name }}</h1>
+{% if object.description %}
+  {{ object.description }}
+{% else %}
+  <span class="quiet">No description</span>
+{% endif %}
+
+<div id="attributes">
+  <h2>Attributes</h2>
+  {% for attr in object.attributes.all %}
+  <div class="attribute">
+    <a href="{% groupurl knowledge_base_index project %}?a={{ attr.name }}">{{ attr.name }}</a>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

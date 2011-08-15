@@ -45,3 +45,9 @@ class FObject(models.Model):
     
     def __unicode__(self):
         return self.name
+        
+    def has_attributes(self, attributes):
+        for attr in attributes:
+            if len(self.attributes.filter(name=attr)) == 0:
+                return False
+        return True

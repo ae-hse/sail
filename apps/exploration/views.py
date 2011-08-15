@@ -1,8 +1,14 @@
 from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django import forms
+
+import urllib
+
+from models import FObject, FAttribute
+from misc import import_context
 
 def group_context(group, bridge):
     # @@@ use bridge
@@ -33,7 +39,68 @@ def knowledge_base(request, template_name="exploration/kb.html"):
     """Displays knowledge base management tools
     """
     group, bridge = group_and_bridge(request)
-    
     ctx = group_context(group, bridge)
     
-    return render_to_response(template_name, RequestContext(request, ctx))
+    filter_list = request.GET.getlist("a")
+    now_filtering = len(filter_list) != 0
+    filter_list = [urllib.unquote(attr) for attr in filter_list]
+    if now_filtering:
+        objects = []
+        attributes_set = set()
+        for obj in group.content_objects(FObject):
+            if obj.has_attributes(filter_list):
+                objects.append(obj) 
+                attributes_set = attributes_set | set(obj.attributes.all())
+        attributes = list(attributes_set)
+    else:
+        objects = group.content_objects(FObject)
+        attributes = group.content_objects(FAttribute)
+    data_dictionary = {
+        "objects" : objects,
+        "attributes" : attributes,
+        "filtering" : now_filtering,
+        "current_path" : request.get_full_path(),
+        "filter_list" : filter_list,
+        "project": group,
+    }
+    return render_to_response(template_name, 
+                              data_dictionary, 
+                              context_instance=RequestContext(request, ctx))
+
+class UploadFileForm(forms.Form):
+    import_context = forms.FileField()
+                              
+@login_required                              
+def import_context_view(request, template_name="exploration/import.html"):
+    """docstring for import_context"""
+    group, bridge = group_and_bridge(request)
+    ctx = group_context(group, bridge)
+    
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            if request.user.is_authenticated():
+                import_context(group, request.FILES['import_context'])
+            else:
+                # TODO: Show message
+                pass
+            return HttpResponseRedirect(reverse('exploration.views.main'))
+    else:
+        form = UploadFileForm()
+    return render_to_response(template_name,
+                            { "form" : form },
+                            context_instance=RequestContext(request, ctx))
+
+@login_required
+def object_details(request, id, template_name="exploration/objects/details.html"):
+    group, bridge = group_and_bridge(request)
+    ctx = group_context(group, bridge)
+    
+    object_ = get_object_or_404(FObject, pk=id)
+    data_dictionary = {
+        "object" : object_,
+        "project": group,
+    }
+    return render_to_response(template_name,
+                              data_dictionary,
+                              context_instance=RequestContext(request, ctx))

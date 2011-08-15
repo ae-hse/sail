@@ -1,0 +1,23 @@
+div.attribute {
+    padding: 4px;
+    float: left;
+}
+
+div#filter_list {
+    margin-bottom: 20px;
+    padding: 4px;
+    border: 1px dotted #000;
+}
+
+img#cross {
+    vertical-align: text-top;
+}
+
+div.object {
+    padding: 4px;
+    float: left;
+}
+
+div#attributes {
+    clear: both;
+}
