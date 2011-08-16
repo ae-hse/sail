@@ -1,6 +1,6 @@
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django import forms
@@ -84,7 +84,7 @@ def import_context_view(request, template_name="exploration/import.html"):
             else:
                 # TODO: Show message
                 pass
-            return HttpResponseRedirect(reverse('exploration.views.main'))
+            return HttpResponseRedirect(bridge.reverse('knowledge_base_index', group))
     else:
         form = UploadFileForm()
     return render_to_response(template_name,
