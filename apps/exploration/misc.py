@@ -2,6 +2,21 @@ from models import FObject, FAttribute
 
 import fca
 
+def prepare_data_for_edit(group):
+    """Prepares data for knowledge base edit view"""
+    objects = group.content_objects(FObject)
+    attributes = group.content_objects(FAttribute)
+    
+    object_names = [obj.name for obj in objects]
+    attribute_names = [attr.name for attr in attributes]
+    
+    table = []
+    for obj in objects:
+        table.append(obj.get_as_boolean_list(group))
+        
+    context = fca.Context(table, object_names, attribute_names)
+    return context, objects, attributes
+
 def import_context(group, file_):
     """Read context from uploaded cxt file and replace current context with it
     """

@@ -51,3 +51,9 @@ class FObject(models.Model):
             if len(self.attributes.filter(name=attr)) == 0:
                 return False
         return True
+    
+    def get_as_boolean_list(self, group):
+        """Return a list which represents what attributes this object has"""
+        object_intent = self.attributes.all()
+        all_attributes = group.content_objects(FAttribute)
+        return [(attr in object_intent) for attr in all_attributes]

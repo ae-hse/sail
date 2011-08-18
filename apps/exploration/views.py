@@ -1,14 +1,15 @@
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django import forms
+from django.utils import simplejson
 
 import urllib
 
 from models import FObject, FAttribute
-from misc import import_context
+from misc import import_context, prepare_data_for_edit
 
 def group_context(group, bridge):
     # @@@ use bridge
@@ -36,7 +37,7 @@ def group_and_bridge(request):
 
 @login_required    
 def knowledge_base(request, template_name="exploration/kb.html"):
-    """Displays knowledge base management tools
+    """Displays objects and attributes
     """
     group, bridge = group_and_bridge(request)
     ctx = group_context(group, bridge)
@@ -104,3 +105,31 @@ def object_details(request, id, template_name="exploration/objects/details.html"
     return render_to_response(template_name,
                               data_dictionary,
                               context_instance=RequestContext(request, ctx))
+@login_required                       
+def edit_knowledge_base(request, template_name="exploration/edit.html"):
+    """Edit knowledge base view"""
+    group, bridge = group_and_bridge(request)
+    ctx = group_context(group, bridge)
+    
+    context, objects, attributes = prepare_data_for_edit(group)
+    data_dictionary = {
+        "objects" : objects,
+        "attributes" : attributes,
+    }
+    return render_to_response(template_name, 
+                              data_dictionary, 
+                              context_instance=RequestContext(request, ctx))
+                              
+                              
+@login_required
+def get_intent(request):
+    """AJAX"""
+    if request.method == 'POST':
+        pk = request.POST['pk']
+        object = FObject.objects.get(pk=pk)
+        attributes = object.attributes.all()
+        attributes_ids = [attr.pk for attr in attributes]
+        return HttpResponse(simplejson.dumps(attributes_ids, ensure_ascii=False), 
+                                mimetype='application/json')
+    else:
+        raise Http404
