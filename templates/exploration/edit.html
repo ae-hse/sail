@@ -7,11 +7,12 @@
 
 {% for obj in objects %}
 <div id="{{ obj.pk }}" class="edit-object">
-  <h2>{{ obj.name }}</h2>
+  <h2>{{ obj.name }} &#62;&#62;</h2>
   <div style="display: none" class="edit-attributes">
     {% for attr in attributes %}
       <input type="checkbox" name="{{ obj.pk }}" value="{{ attr.pk }}" />{{ attr.name }}</br>
     {% endfor %}
+    <input type="submit" name="save" value="Submit" id="{{ obj.pk }}"/>
   </div>
 </div>
 {% endfor %}

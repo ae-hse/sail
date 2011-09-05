@@ -6,4 +6,5 @@ urlpatterns = patterns("",
     url(r"^object/(?P<id>\d+)/$", "exploration.views.object_details", name="object_details"),
     url(r"^edit$", "exploration.views.edit_knowledge_base", name="edit_kb"),
     url(r"^getintent$", "exploration.views.get_intent", name="get_intent"),
+    url(r"^submitintent$", "exploration.views.submit_intent", name="submit_intent"),
 )
