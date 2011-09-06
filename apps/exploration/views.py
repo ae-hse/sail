@@ -141,6 +141,7 @@ def submit_intent(request):
         pk = request.POST['pk']
         object = FObject.objects.get(pk=pk)
         intent = [int(id_) for id_ in request.POST.getlist(u'intent[]')]
+        object.set_intent(intent)
         status = 'ok'
         return HttpResponse(simplejson.dumps({'status' : status}, ensure_ascii=False), 
                             mimetype='application/json')

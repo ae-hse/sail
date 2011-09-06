@@ -57,3 +57,10 @@ class FObject(models.Model):
         object_intent = self.attributes.all()
         all_attributes = group.content_objects(FAttribute)
         return [(attr in object_intent) for attr in all_attributes]
+        
+    def set_intent(self, intent):
+        """
+        Sets intent according to intent list, which contains pk's of atributes
+        """
+        for pk in intent:
+            self.attributes.add(FAttribute.objects.get(pk=pk))
