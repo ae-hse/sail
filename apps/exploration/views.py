@@ -50,7 +50,7 @@ def knowledge_base(request, template_name="exploration/kb.html"):
         attributes_set = set()
         for obj in group.content_objects(FObject):
             if obj.has_attributes(filter_list):
-                objects.append(obj) 
+                objects.append(obj)
                 attributes_set = attributes_set | set(obj.attributes.all())
         attributes = list(attributes_set)
     else:

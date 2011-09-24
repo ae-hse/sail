@@ -7,7 +7,8 @@
 
 {% for obj in objects %}
 <div id="{{ obj.pk }}" class="edit-object">
-  <h2>{{ obj.name }} &#62;&#62;</h2>
+  <h2>{{ obj.name }}</h2>
+    <a id="show-attributes" href="#">Show/hide attributes</a>&nbsp;<a href="#">Edit</a>
   <div style="display: none" class="edit-attributes">
     {% for attr in attributes %}
       <input type="checkbox" name="{{ obj.pk }}" value="{{ attr.pk }}" />{{ attr.name }}</br>

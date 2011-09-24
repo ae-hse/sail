@@ -1,5 +1,7 @@
 // Edit Object
-$("div.edit-object h2").click(function(e) {
+$("div.edit-object a#show-attributes").click(function(event) {
+    event.preventDefault();
+    
     var obj_div = $(this).parent("div.edit-object");
     var obj_pk = obj_div.attr("id");
     $.post("getintent", {pk: obj_pk},
