@@ -116,11 +116,12 @@ def object_edit(request, id, template_name="exploration/objects/edit.html"):
     if request.method == 'POST':
         if 'delete' in request.POST:
             object_.delete()
+            return HttpResponseRedirect(bridge.reverse('edit_kb', group))
         else:
             form = ObjectForm(request.POST, instance=object_)
             if form.is_valid():
                 form.save()
-        return HttpResponseRedirect(bridge.reverse('object_details', group, {"id" : object_.id}))
+            return HttpResponseRedirect(bridge.reverse('object_details', group, {"id" : object_.id}))
     else:
         form = ObjectForm(instance=object_)
     
