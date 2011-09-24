@@ -1,0 +1,20 @@
+{% extends "exploration/base.html" %}
+
+{% load group_tags %}
+
+{% block body %}
+
+<h1>Edit Object</h1>
+<form action="{% groupurl object_edit project id=object.id %}" method="post">
+	{% csrf_token %}
+	{% include "exploration/objects/form.html" %}
+	<p><input type="submit" name='save' value="Save Object"/></p>
+</form>
+<form action="{% groupurl object_edit project id=object.id %}" name="deleteForm" method="post">
+	{% csrf_token %}
+	<input type="hidden" name="delete" value="ok">
+	<p><input type="button" value="Delete" onclick="confirm_object_delete()"/></p>
+</form>
+<a href="{% groupurl edit_kb project %}">&larr; Back<a>
+
+{% endblock %}

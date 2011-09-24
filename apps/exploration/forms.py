@@ -1,7 +1,7 @@
 from django import forms
-from exploration.models import Entity
+from models import FObject
 
-class NewEntityForm(forms.ModelForm):
+class ObjectForm(forms.ModelForm):
     class Meta:
-        model = Entity
-        exclude = ('deleted', 'content_type', 'object_id', 'created')
+        model = FObject
+        fields = ('name', 'description')

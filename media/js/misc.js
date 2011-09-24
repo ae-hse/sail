@@ -45,3 +45,11 @@ $("div.edit-object a#show-attributes").click(function(event) {
         );
     });
 });
+
+// Confirm objects' deletion
+function confirm_object_delete() {
+	var answer = confirm("Delete Object?")
+	if (answer) {
+		document.deleteForm.submit()
+	}
+}

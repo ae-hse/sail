@@ -8,6 +8,7 @@ from django.utils import simplejson
 
 import urllib
 
+from forms import ObjectForm
 from models import FObject, FAttribute
 from misc import import_context, prepare_data_for_edit
 
@@ -105,6 +106,33 @@ def object_details(request, id, template_name="exploration/objects/details.html"
     return render_to_response(template_name,
                               data_dictionary,
                               context_instance=RequestContext(request, ctx))
+
+@login_required
+def object_edit(request, id, template_name="exploration/objects/edit.html"):
+    group, bridge = group_and_bridge(request)
+    ctx = group_context(group, bridge)
+    
+    object_ = get_object_or_404(FObject, pk=id)
+    if request.method == 'POST':
+        if 'delete' in request.POST:
+            object_.delete()
+        else:
+            form = ObjectForm(request.POST, instance=object_)
+            if form.is_valid():
+                form.save()
+        return HttpResponseRedirect(bridge.reverse('object_details', group, {"id" : object_.id}))
+    else:
+        form = ObjectForm(instance=object_)
+    
+    data_dictionary = {
+        "object" : object_,
+        "project": group,
+        "form" : form
+    }
+    return render_to_response(template_name,
+                              data_dictionary,
+                              context_instance=RequestContext(request, ctx))
+
 @login_required                       
 def edit_knowledge_base(request, template_name="exploration/edit.html"):
     """Edit knowledge base view"""
@@ -115,6 +143,7 @@ def edit_knowledge_base(request, template_name="exploration/edit.html"):
     data_dictionary = {
         "objects" : objects,
         "attributes" : attributes,
+        "project" : group,
     }
     return render_to_response(template_name, 
                               data_dictionary, 
