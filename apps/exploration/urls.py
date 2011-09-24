@@ -9,6 +9,8 @@ urlpatterns = patterns("",
     url(r"^object/new/$", "exploration.views.object_new", name="object_new"),
     url(r"^object/(?P<id>\d+)/$", "exploration.views.object_details", name="object_details"),
     url(r"^object/(?P<id>\d+)/edit/$", "exploration.views.object_edit", name="object_edit"),
+    # Attributes' urls
+    url(r"^attribute/new/$", "exploration.views.attribute_new", name="attribute_new"),
     # AJAX
     url(r"^getintent$", "exploration.views.get_intent", name="get_intent"),
     url(r"^submitintent$", "exploration.views.submit_intent", name="submit_intent"),

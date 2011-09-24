@@ -1,0 +1,14 @@
+{% extends "exploration/base.html" %}
+
+{% load group_tags %}
+
+{% block body %}
+
+<h1>New Attribute</h1>
+<form action="{% groupurl attribute_new project %}" method="post">
+	{% csrf_token %}
+	{% include "exploration/attributes/form.html" %}
+	<p><input type="submit" name='save' value="Save Attribute"/></p>
+</form>
+
+{% endblock %}

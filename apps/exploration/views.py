@@ -8,7 +8,7 @@ from django.utils import simplejson
 
 import urllib
 
-from forms import ObjectForm
+from forms import ObjectForm, AttributeForm
 from models import FObject, FAttribute
 from misc import import_context, prepare_data_for_edit
 
@@ -125,6 +125,31 @@ def object_new(request, template_name="exploration/objects/new.html"):
             return HttpResponseRedirect(bridge.reverse('knowledge_base_index', group))
     else:
         form = ObjectForm()
+
+    data_dictionary = {
+        "project": group,
+        "form" : form
+    }
+
+    return render_to_response(template_name,
+                              data_dictionary,
+                              context_instance=RequestContext(request, ctx))
+
+@login_required
+def attribute_new(request, template_name="exploration/attributes/new.html"):
+    group, bridge = group_and_bridge(request)
+    ctx = group_context(group, bridge)
+
+    if request.method == 'POST':
+        form = AttributeForm(request.POST)
+        if form.is_valid():
+            attribute = form.save(commit=False)
+            if group:
+                group.associate(attribute, commit=False)
+            attribute.save()
+        return HttpResponseRedirect(bridge.reverse('knowledge_base_index', group))
+    else:
+        form = AttributeForm()
 
     data_dictionary = {
         "project": group,
