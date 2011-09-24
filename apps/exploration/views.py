@@ -108,6 +108,34 @@ def object_details(request, id, template_name="exploration/objects/details.html"
                               context_instance=RequestContext(request, ctx))
 
 @login_required
+def object_new(request, template_name="exploration/objects/new.html"):
+    group, bridge = group_and_bridge(request)
+    ctx = group_context(group, bridge)
+
+    if request.method == 'POST':
+        form = ObjectForm(request.POST)
+        if form.is_valid():
+            object_ = form.save(commit=False)
+            if group:
+                group.associate(object_, commit=False)
+            object_.save()
+            return HttpResponseRedirect(bridge.reverse('object_details', group, {"id" : object_.id}))
+        else:
+            # TODO: Possibly validation error handling
+            return HttpResponseRedirect(bridge.reverse('knowledge_base_index', group))
+    else:
+        form = ObjectForm()
+
+    data_dictionary = {
+        "project": group,
+        "form" : form
+    }
+
+    return render_to_response(template_name,
+                              data_dictionary,
+                              context_instance=RequestContext(request, ctx))
+
+@login_required
 def object_edit(request, id, template_name="exploration/objects/edit.html"):
     group, bridge = group_and_bridge(request)
     ctx = group_context(group, bridge)

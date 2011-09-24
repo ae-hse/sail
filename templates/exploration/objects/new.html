@@ -1,0 +1,14 @@
+{% extends "exploration/base.html" %}
+
+{% load group_tags %}
+
+{% block body %}
+
+<h1>New Object</h1>
+<form action="{% groupurl object_new project %}" method="post">
+	{% csrf_token %}
+	{% include "exploration/objects/form.html" %}
+	<p><input type="submit" name='save' value="Save Object"/></p>
+</form>
+
+{% endblock %}
