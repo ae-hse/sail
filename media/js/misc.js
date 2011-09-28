@@ -80,3 +80,25 @@ function confirm_object_delete() {
 		document.deleteForm.submit()
 	}
 }
+
+$("a.unconfirm-imp").click(function(e) {
+	event.preventDefault();
+	imp_pk = $(this).attr("id")
+
+	$.blockUI({ css: { 
+			border: 'none', 
+			padding: '15px', 
+			backgroundColor: '#000', 
+			'-webkit-border-radius': '10px', 
+			'-moz-border-radius': '10px', 
+			opacity: .5, 
+			color: '#fff' 
+		} });
+
+	$.post("unconfirmimplication", {pk: imp_pk},
+			function(data) {
+				$.unblockUI();
+				document.location.href = document.location.href;
+			}
+	);
+});

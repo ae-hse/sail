@@ -262,3 +262,14 @@ def confirm_implication(request):
         return HttpResponseRedirect(bridge.reverse('implications', group))
     else:
         raise Http404
+
+@login_required
+def unconfirm_implication(request):
+    group, bridge = group_and_bridge(request)
+
+    if request.method == 'POST':
+        pk = request.POST['pk']
+        ExplorationWrapper.unconfirm_implication(group, pk)
+        return HttpResponseRedirect(bridge.reverse('implications', group))
+    else:
+        raise Http404

@@ -134,6 +134,8 @@ class WebExpert(object):
     def confirm_implication(self, imp_pk):
         self.exploration.confirm_implication(AttributeImplication.objects.get(pk=imp_pk))
 
+    def unconfirm_implication(self, imp_pk):
+        self.exploration.unconfirm_implication(AttributeImplication.objects.get(pk=imp_pk))
 
 class ExplorationWrapper(object):
 
@@ -156,6 +158,10 @@ class ExplorationWrapper(object):
     @classmethod
     def confirm_implication(cls, group, imp_pk):
         cls.get_expert(group).confirm_implication(imp_pk)
+
+    @classmethod
+    def unconfirm_implication(cls, group, imp_pk):
+        cls.get_expert(group).unconfirm_implication(imp_pk)
 
     @classmethod
     def get_background_knowledge(cls, group):

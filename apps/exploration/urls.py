@@ -16,4 +16,6 @@ urlpatterns = patterns("",
     url(r"^getintent$", "exploration.views.get_intent", name="get_intent"),
     url(r"^submitintent$", "exploration.views.submit_intent", name="submit_intent"),
     url(r"^confirmimplication$", "exploration.views.confirm_implication", name="confirm_implication"),
+    url(r"^unconfirmimplication$", "exploration.views.unconfirm_implication", name="unconfirm_implication"),
+
 )
