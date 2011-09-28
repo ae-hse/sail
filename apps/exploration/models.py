@@ -57,10 +57,23 @@ class FObject(models.Model):
         object_intent = self.attributes.all()
         all_attributes = group.content_objects(FAttribute)
         return [(attr in object_intent) for attr in all_attributes]
+
+class AttributeImplication(models.Model):
+    """Implication on attributes"""
+    premise = models.ManyToManyField(FAttribute, related_name='premise_set+')
+    conclusion = models.ManyToManyField(FAttribute, related_name='conclusion_set+')
+    minimal_generator = models.ManyToManyField(FAttribute, related_name='mingen_set+')
+    is_confirmed = models.BooleanField(default=False)
+
+    # The following three fields are required for being group aware.
+    # We use a nullable generic foreign key to enable it to be optional
+    # and we don't know what group model it will point to.
+    object_id = models.IntegerField(null=True)
+    content_type = models.ForeignKey(ContentType, null=True)
+    group = generic.GenericForeignKey("content_type", "object_id")
+
+    def get_premise(self):
+        return set([attr.pk for attr in self.premise.all()])
         
-    def set_intent(self, intent):
-        """
-        Sets intent according to intent list, which contains pk's of atributes
-        """
-        for pk in intent:
-            self.attributes.add(FAttribute.objects.get(pk=pk))
+    def get_conclusion(self):
+        return set([attr.pk for attr in self.conclusion.all()])

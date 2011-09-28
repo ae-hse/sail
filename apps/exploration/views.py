@@ -2,7 +2,6 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
 from django import forms
 from django.utils import simplejson
 
@@ -11,6 +10,7 @@ import urllib
 from forms import ObjectForm, AttributeForm
 from models import FObject, FAttribute
 from misc import import_context, prepare_data_for_edit
+from exploration import ExplorationWrapper
 
 def group_context(group, bridge):
     # @@@ use bridge
@@ -202,7 +202,23 @@ def edit_knowledge_base(request, template_name="exploration/edit.html"):
     return render_to_response(template_name, 
                               data_dictionary, 
                               context_instance=RequestContext(request, ctx))
-                              
+
+@login_required
+def implications(request, template_name="exploration/implications.html"):
+    group, bridge = group_and_bridge(request)
+    ctx = group_context(group, bridge)
+
+    open_implications = ExplorationWrapper.get_open_implications(group)
+    confirmed_implications = ExplorationWrapper.get_background_knowledge(group)
+
+    data_dictionary = {
+        "project" : group,
+        "open_implications" : open_implications,
+        "confirmed_implications" : confirmed_implications,
+    }
+    return render_to_response(template_name, 
+                              data_dictionary, 
+                              context_instance=RequestContext(request, ctx))
                               
 @login_required
 def get_intent(request):
@@ -220,13 +236,29 @@ def get_intent(request):
 @login_required
 def submit_intent(request):
     """AJAX"""
+    group, bridge = group_and_bridge(request)
+
     if request.method == 'POST':
-        pk = request.POST['pk']
-        object = FObject.objects.get(pk=pk)
+        object_pk = int(request.POST['pk'])
         intent = [int(id_) for id_ in request.POST.getlist(u'intent[]')]
-        object.set_intent(intent)
-        status = 'ok'
+        try:
+            ExplorationWrapper.edit_object(group, object_pk, set(intent))
+            status = 'ok'
+        except Exception as details:
+            status = str(details)
         return HttpResponse(simplejson.dumps({'status' : status}, ensure_ascii=False), 
                             mimetype='application/json')
+    else:
+        raise Http404
+
+@login_required
+def confirm_implication(request):
+    """AJAX"""
+    group, bridge = group_and_bridge(request)
+
+    if request.method == 'POST':
+        pk = request.POST['pk']
+        ExplorationWrapper.confirm_implication(group, pk)
+        return HttpResponseRedirect(bridge.reverse('implications', group))
     else:
         raise Http404

@@ -1,0 +1,74 @@
+{% extends "exploration/base.html" %}
+
+{% load i18n %}
+{% load group_tags %}
+
+{% block body %}
+
+<h1>Implications</h1>
+
+<div class="implication-table">
+<h2>Background Knowledge</h2>
+
+<table>
+<tr>
+    <th>Premise</th>
+    <th>Conclusion</th>
+    <th>Controls</th>
+</tr>
+{% for imp in confirmed_implications %}
+    <tr>
+    <td>
+    <table style="border: 0px;">
+    {% for attr in imp.premise.all %}
+        {{ attr.name }}<br/>
+    {% endfor %}
+    </table>
+    </td>
+    <td>
+    <table>
+    {% for attr in imp.conclusion.all %}
+        {{ attr.name }}<br/>
+    {% endfor %}
+    </table>
+    </td>
+    <td>
+        <a id="{{ imp.pk }}" class="unconfirm-imp" href="#">Unconfirm</a>
+    </td>
+    </tr>
+{% endfor %}
+</table>
+
+<h2>Open Implications</h2>
+
+<table>
+<tr>
+    <th>Premise</th>
+    <th>Conclusion</th>
+    <th>Controls</th>
+</tr>
+{% for imp in open_implications %}
+    <tr>
+    <td>
+    <table style="border: 0px;">
+    {% for attr in imp.premise.all %}
+        {{ attr.name }}<br/>
+    {% endfor %}
+    </table>
+    </td>
+    <td>
+    <table>
+    {% for attr in imp.conclusion.all %}
+        {{ attr.name }}<br/>
+    {% endfor %}
+    </table>
+    </td>
+    <td>
+        <a id="{{ imp.pk }}" class="confirm-imp" href="#">Confirm</a></br><a id="{{ imp.pk }}" class="reject-imp" href="#">Reject</a>
+    </td>
+    </tr>
+{% endfor %}
+</table>
+</div>
+
+{% endblock %}

@@ -1,4 +1,5 @@
-from models import FObject, FAttribute
+from models import FObject, FAttribute, AttributeImplication
+from exploration import ExplorationWrapper
 
 import fca
 
@@ -61,3 +62,5 @@ def set_context(group, cxt):
 def clear_db(group):
     group.content_objects(FObject).delete()
     group.content_objects(FAttribute).delete()
+    group.content_objects(AttributeImplication).delete()
+    ExplorationWrapper.clear_experts()
