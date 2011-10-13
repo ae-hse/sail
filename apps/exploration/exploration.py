@@ -56,10 +56,10 @@ class ImplicationsList(ImplicationsContainer):
         db_imp = AttributeImplication(is_confirmed=False)
         self.group.associate(db_imp, commit=False)
         db_imp.save()
-        for name in fca_imp.get_premise():
-            db_imp.premise.add(self.group.content_objects(FAttribute).get(pk=name))
-        for name in fca_imp.get_conclusion() - fca_imp.get_premise():
-            db_imp.conclusion.add(self.group.content_objects(FAttribute).get(pk=name))
+
+        get_attr = lambda name: self.group.content_objects(FAttribute).get(pk=name)
+        db_imp.premise.add(*[get_attr(name) for name in fca_imp.get_premise()])
+        db_imp.conclusion.add(*[get_attr(name) for name in fca_imp.get_conclusion()])
 
     def update(self, imp_list):
         for imp in self:

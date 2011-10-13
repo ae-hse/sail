@@ -4,6 +4,7 @@ from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.utils import simplejson
+from django.db import transaction
 
 import urllib
 import datetime
@@ -12,6 +13,9 @@ from forms import ObjectForm, AttributeForm
 from models import FObject, FAttribute
 from misc import import_context, prepare_data_for_edit, get_csv
 from exploration import ExplorationWrapper
+
+# Uncomment next line if you want to use profiler
+# from utils.profiler import profile
 
 def group_context(group, bridge):
     # @@@ use bridge
@@ -72,8 +76,9 @@ def knowledge_base(request, template_name="exploration/kb.html"):
 
 class UploadFileForm(forms.Form):
     import_context = forms.FileField()
-                              
-@login_required                              
+                
+@login_required
+@transaction.commit_manually
 def import_context_view(request, template_name="exploration/import.html"):
     """docstring for import_context"""
     group, bridge = group_and_bridge(request)
@@ -84,6 +89,7 @@ def import_context_view(request, template_name="exploration/import.html"):
         if form.is_valid():
             if request.user.is_authenticated():
                 import_context(group, request.FILES['import_context'])
+                transaction.commit()
             else:
                 # TODO: Show message
                 pass
@@ -205,11 +211,13 @@ def edit_knowledge_base(request, template_name="exploration/edit.html"):
                               context_instance=RequestContext(request, ctx))
 
 @login_required
+@transaction.commit_manually
 def implications(request, template_name="exploration/implications.html"):
     group, bridge = group_and_bridge(request)
     ctx = group_context(group, bridge)
 
     open_implications = ExplorationWrapper.get_open_implications(group)
+    transaction.commit()
     confirmed_implications = ExplorationWrapper.get_background_knowledge(group)
 
     data_dictionary = {

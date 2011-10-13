@@ -104,7 +104,7 @@ MIDDLEWARE_CLASSES = [
     "pagination.middleware.PaginationMiddleware",
     "django_sorting.middleware.SortingMiddleware",
     "pinax.middleware.security.HideSensistiveFieldsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # "debug_toolbar.middleware.DebugToolbarMiddleware"
 ]
 
 ROOT_URLCONF = "sail.urls"
@@ -148,7 +148,7 @@ INSTALLED_APPS = [
     # external
     "notification", # must be first
     "staticfiles",
-    "debug_toolbar",
+    # "debug_toolbar",
     "mailer",
     "uni_form",
     "django_openid",
@@ -232,6 +232,8 @@ EMAIL_DEBUG = DEBUG
 DEBUG_TOOLBAR_CONFIG = {
     "INTERCEPT_REDIRECTS": False,
 }
+
+PROFILE_LOG_BASE = os.path.join(PROJECT_ROOT, "logs")
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.

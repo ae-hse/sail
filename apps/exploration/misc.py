@@ -57,9 +57,8 @@ def set_context(group, cxt):
         obj = FObject(name=object_name, group=group)
         obj.save()
         object_intent = cxt.get_object_intent(object_name)
-        for attribute_name in cxt.attributes:
-            if attribute_name in object_intent:
-                obj.attributes.add(group.content_objects(FAttribute).get(name=attribute_name))
+        get_attr = lambda name: group.content_objects(FAttribute).get(name=name)
+        obj.attributes.add(*[get_attr(name) for name in object_intent])
                 
 def clear_db(group):
     group.content_objects(FObject).delete()
