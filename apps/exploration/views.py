@@ -6,10 +6,11 @@ from django import forms
 from django.utils import simplejson
 
 import urllib
+import datetime
 
 from forms import ObjectForm, AttributeForm
 from models import FObject, FAttribute
-from misc import import_context, prepare_data_for_edit
+from misc import import_context, prepare_data_for_edit, get_csv
 from exploration import ExplorationWrapper
 
 def group_context(group, bridge):
@@ -273,3 +274,14 @@ def unconfirm_implication(request):
         return HttpResponseRedirect(bridge.reverse('implications', group))
     else:
         raise Http404
+
+@login_required
+def export_context(request):
+    group, bridge = group_and_bridge(request)
+
+    response = HttpResponse(mimetype='text/csv')
+    response['Content-Disposition'] = \
+        'attachment; filename=context-{0}.csv'.format(datetime.date.today())
+    response.write(get_csv(group))
+    
+    return response

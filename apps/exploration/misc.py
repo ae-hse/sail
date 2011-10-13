@@ -1,6 +1,8 @@
 from models import FObject, FAttribute, AttributeImplication
 from exploration import ExplorationWrapper
 
+from StringIO import StringIO
+
 import fca
 
 def prepare_data_for_edit(group):
@@ -64,3 +66,20 @@ def clear_db(group):
     group.content_objects(FAttribute).delete()
     group.content_objects(AttributeImplication).delete()
     ExplorationWrapper.clear_experts()
+
+def get_csv(group):
+    all_objects = group.content_objects(FObject)
+    all_attributes = group.content_objects(FAttribute)
+    object_names = [obj.name for obj in all_objects]
+    attribute_names = [attr.name for attr in all_attributes]
+    table = []
+    for obj in all_objects:
+        table.append(obj.get_as_boolean_list(group))
+    
+    out = StringIO()
+    q = lambda s: s.replace('\"', '\'')
+    print >>out, u";" + u";".join(q(attr) for attr in attribute_names)
+    f = lambda n: u"1" if n else u"0"
+    for i in xrange(len(object_names)):
+        print >>out, u";".join([q(object_names[i])] + [f(n) for n in table[i]])
+    return out.getvalue()

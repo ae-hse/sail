@@ -17,5 +17,5 @@ urlpatterns = patterns("",
     url(r"^submitintent$", "exploration.views.submit_intent", name="submit_intent"),
     url(r"^confirmimplication$", "exploration.views.confirm_implication", name="confirm_implication"),
     url(r"^unconfirmimplication$", "exploration.views.unconfirm_implication", name="unconfirm_implication"),
-
+    url(r"^export$", "exploration.views.export_context", name="export_context"),
 )
