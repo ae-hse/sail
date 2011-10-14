@@ -266,7 +266,11 @@ def confirm_implication(request):
 
     if request.method == 'POST':
         pk = request.POST['pk']
-        ExplorationWrapper.confirm_implication(group, int(pk))
+        try:
+            ExplorationWrapper.confirm_implication(group, int(pk))
+        except KeyError:
+            # TODO: Relative basis was changed. Show message.
+            pass
         return HttpResponseRedirect(bridge.reverse('implications', group))
     else:
         raise Http404
