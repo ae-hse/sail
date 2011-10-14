@@ -59,21 +59,23 @@ class ImplicationsList(object):
     """Interface for list of open implications (relative basis)"""
 
     def __init__(self):
-        self._data = []
+        self._data = {}
+        self._counter = 0
 
     def __getitem__(self, key):
         return self._data[key]
     
     def __iter__(self):
-        for imp in self._data:
+        for imp in self._data.values():
             yield imp
 
     def _get_implications(self):
         return self._data
 
     def append(self, fca_imp):
-        fca_imp.pk = len(self._data)
-        self._data.append(fca_imp)
+        fca_imp.pk = self._counter
+        self._data[self._counter] = fca_imp
+        self._counter += 1
 
     def get_query_set(self, attributes):
         for imp in self:
@@ -83,7 +85,7 @@ class ImplicationsList(object):
         pass
 
     def update(self, imp_list):
-        self._data = []
+        self._data = {}
         
         for imp in imp_list:
             self.append(imp)
