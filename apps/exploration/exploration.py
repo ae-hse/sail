@@ -137,62 +137,55 @@ class DBContext(fca.Context):
         obj = self.group.content_objects(FObject).get(pk=name)
         return set([attr.pk for attr in obj.attributes.all()])
 
-
-
 class WebExpert(object):
 
+    def provide_counterexample(self, imp):
+        pass
+
+class WebExploration(AttributeExploration):
+
     def __init__(self, group):
-        self.db = ExplorationDB(DBContext(group), BackgroundKnowledgeList(group))
-        self.exploration = AttributeExploration(self.db, self)
-        self._last_implications = []
-
-    def get_open_implications(self):
-        self._last_implications = self.exploration.get_open_implications()
-        return self._last_implications
-
-    def get_background_knowledge(self):
-        return self.db.base
+        db = ExplorationDB(DBContext(group), BackgroundKnowledgeList(group))
+        expert = WebExpert()
+        super(WebExploration, self).__init__(db, expert)
 
     def confirm_implication(self, imp_pk):
-        # TODO: Potentially it may lead to undetermined behaviour.
-        # What if _last_implications was changed since last time?
-        # May be we should somehow block implication page while exploration
-        self.exploration.confirm_implication(self._last_implications[imp_pk])
+        super(WebExploration, self).confirm_implication(self.db.open_implications[imp_pk])
 
     def unconfirm_implication(self, imp_pk):
-        self.exploration.unconfirm_implication(AttributeImplication.objects.get(pk=imp_pk))
+        super(WebExploration, self).unconfirm_implication(AttributeImplication.objects.get(pk=imp_pk))
 
 class ExplorationWrapper(object):
 
-    _experts = {}
+    _explorations = {}
 
     @classmethod
-    def clear_experts(cls):
-        cls._experts.clear()
+    def clear(cls):
+        cls._explorations.clear()
 
     @classmethod
-    def get_expert(cls, group):
-        if group not in cls._experts:
-            cls._experts[group] = WebExpert(group)
-        return cls._experts[group]
+    def get_exploration(cls, group):
+        if group not in cls._explorations:
+            cls._explorations[group] = WebExploration(group)
+        return cls._explorations[group]
 
     @classmethod
     def get_open_implications(cls, group):
         attributes = {attr.pk : attr.name for attr in group.content_objects(FAttribute)}
-        return cls.get_expert(group).get_open_implications().get_query_set(attributes)
+        return cls.get_exploration(group).get_open_implications().get_query_set(attributes)
 
     @classmethod
     def confirm_implication(cls, group, imp_pk):
-        cls.get_expert(group).confirm_implication(imp_pk)
+        cls.get_exploration(group).confirm_implication(imp_pk)
 
     @classmethod
     def unconfirm_implication(cls, group, imp_pk):
-        cls.get_expert(group).unconfirm_implication(imp_pk)
+        cls.get_exploration(group).unconfirm_implication(imp_pk)
 
     @classmethod
     def get_background_knowledge(cls, group):
-        return cls.get_expert(group).get_background_knowledge().get_query_set()
+        return cls.get_exploration(group).db.base.get_query_set()
 
     @classmethod
     def edit_object(cls, group, object_, intent):
-        cls.get_expert(group).db.edit_example(object_, object_, intent)
+        cls.get_exploration(group).db.edit_example(object_, object_, intent)

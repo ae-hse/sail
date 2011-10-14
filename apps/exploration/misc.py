@@ -64,7 +64,7 @@ def clear_db(group):
     group.content_objects(FObject).delete()
     group.content_objects(FAttribute).delete()
     group.content_objects(AttributeImplication).delete()
-    ExplorationWrapper.clear_experts()
+    ExplorationWrapper.clear()
 
 def get_csv(group):
     all_objects = group.content_objects(FObject)
