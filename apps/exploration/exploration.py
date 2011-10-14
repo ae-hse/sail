@@ -37,38 +37,56 @@ class BackgroundKnowledgeList(ImplicationsContainer):
     """Interface for background knowledge implications"""
     
     def _get_implications(self):
-        return self.group.content_objects(AttributeImplication).filter(is_confirmed=True)
-
-    def append(self, imp):
-        implications_objects = super(BackgroundKnowledgeList, self)._get_implications()
-        imp_obj = implications_objects.get(pk=imp.pk)
-        imp_obj.is_confirmed = True
-        imp_obj.save()
-
-
-class ImplicationsList(ImplicationsContainer):
-    """Interface for list of open implications (relative basis)"""
-    
-    def _get_implications(self):
-        return self.group.content_objects(AttributeImplication).filter(is_confirmed=False)
+        return self.group.content_objects(AttributeImplication)
 
     def append(self, fca_imp):
-        db_imp = AttributeImplication(is_confirmed=False)
+        db_imp = AttributeImplication()
         self.group.associate(db_imp, commit=False)
         db_imp.save()
 
         get_attr = lambda name: self.group.content_objects(FAttribute).get(pk=name)
-        db_imp.premise.add(*[get_attr(name) for name in fca_imp.get_premise()])
-        db_imp.conclusion.add(*[get_attr(name) for name in fca_imp.get_conclusion()])
+        db_imp.premise.add(*[get_attr(name) for name in fca_imp.premise])
+        db_imp.conclusion.add(*[get_attr(name) for name in fca_imp.conclusion])
+
+class TranslatedImplication(fca.Implication):
+
+    def __init__(self, fca_imp, attributes):
+        self._premise = set([attributes[pk] for pk in fca_imp.premise])
+        self._conclusion = set([attributes[pk] for pk in fca_imp.conclusion])
+        self.pk = fca_imp.pk
+
+class ImplicationsList(object):
+    """Interface for list of open implications (relative basis)"""
+
+    def __init__(self):
+        self._data = []
+
+    def __getitem__(self, key):
+        return self._data[key]
+    
+    def __iter__(self):
+        for imp in self._data:
+            yield imp
+
+    def _get_implications(self):
+        return self._data
+
+    def append(self, fca_imp):
+        fca_imp.pk = len(self._data)
+        self._data.append(fca_imp)
+
+    def get_query_set(self, attributes):
+        for imp in self:
+            yield TranslatedImplication(imp, attributes)
+
+    def remove(self, imp):
+        pass
 
     def update(self, imp_list):
-        for imp in self:
-            if imp not in imp_list:
-                self.remove(imp)
-
+        self._data = []
+        
         for imp in imp_list:
-            if imp not in self:
-                self.append(imp)
+            self.append(imp)
 
 
 class DBContext(fca.Context):
@@ -80,7 +98,7 @@ class DBContext(fca.Context):
         super(DBContext, self).__init__()
         self.group = group
 
-        self._implications = ImplicationsList(group)
+        self._implications = ImplicationsList()
 
     def _get_self_as_fca_context(self):
         objects = self.group.content_objects(FObject)
@@ -124,15 +142,20 @@ class WebExpert(object):
     def __init__(self, group):
         self.db = ExplorationDB(DBContext(group), BackgroundKnowledgeList(group))
         self.exploration = AttributeExploration(self.db, self)
+        self._last_implications = []
 
     def get_open_implications(self):
-        return self.exploration.get_open_implications()
+        self._last_implications = self.exploration.get_open_implications()
+        return self._last_implications
 
     def get_background_knowledge(self):
         return self.db.base
 
     def confirm_implication(self, imp_pk):
-        self.exploration.confirm_implication(AttributeImplication.objects.get(pk=imp_pk))
+        # TODO: Potentially it may lead to undetermined behaviour.
+        # What if _last_implications was changed since last time?
+        # May be we should somehow block implication page while exploration
+        self.exploration.confirm_implication(self._last_implications[imp_pk])
 
     def unconfirm_implication(self, imp_pk):
         self.exploration.unconfirm_implication(AttributeImplication.objects.get(pk=imp_pk))
@@ -153,7 +176,8 @@ class ExplorationWrapper(object):
 
     @classmethod
     def get_open_implications(cls, group):
-        return cls.get_expert(group).get_open_implications().get_query_set()
+        attributes = {attr.pk : attr.name for attr in group.content_objects(FAttribute)}
+        return cls.get_expert(group).get_open_implications().get_query_set(attributes)
 
     @classmethod
     def confirm_implication(cls, group, imp_pk):

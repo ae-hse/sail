@@ -211,13 +211,12 @@ def edit_knowledge_base(request, template_name="exploration/edit.html"):
                               context_instance=RequestContext(request, ctx))
 
 @login_required
-@transaction.commit_manually
 def implications(request, template_name="exploration/implications.html"):
     group, bridge = group_and_bridge(request)
     ctx = group_context(group, bridge)
 
     open_implications = ExplorationWrapper.get_open_implications(group)
-    transaction.commit()
+    # open_implications = [open_implications_generator.next() for _ in xrange(10)]
     confirmed_implications = ExplorationWrapper.get_background_knowledge(group)
 
     data_dictionary = {
@@ -267,7 +266,7 @@ def confirm_implication(request):
 
     if request.method == 'POST':
         pk = request.POST['pk']
-        ExplorationWrapper.confirm_implication(group, pk)
+        ExplorationWrapper.confirm_implication(group, int(pk))
         return HttpResponseRedirect(bridge.reverse('implications', group))
     else:
         raise Http404

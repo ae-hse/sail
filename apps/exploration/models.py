@@ -59,11 +59,10 @@ class FObject(models.Model):
         return [(attr in object_intent) for attr in all_attributes]
 
 class AttributeImplication(models.Model):
-    """Implication on attributes"""
+    """Implication on attributes in background knowledge"""
     premise = models.ManyToManyField(FAttribute, related_name='premise_set+')
     conclusion = models.ManyToManyField(FAttribute, related_name='conclusion_set+')
     minimal_generator = models.ManyToManyField(FAttribute, related_name='mingen_set+')
-    is_confirmed = models.BooleanField(default=False)
 
     # The following three fields are required for being group aware.
     # We use a nullable generic foreign key to enable it to be optional

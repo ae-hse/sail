@@ -51,15 +51,15 @@
     <tr>
     <td>
     <table style="border: 0px;">
-    {% for attr in imp.premise.all %}
-        {{ attr.name }}<br/>
+    {% for attr in imp.premise %}
+        {{ attr }}<br/>
     {% endfor %}
     </table>
     </td>
     <td>
     <table>
-    {% for attr in imp.conclusion.all %}
-        {{ attr.name }}<br/>
+    {% for attr in imp.conclusion %}
+        {{ attr }}<br/>
     {% endfor %}
     </table>
     </td>
