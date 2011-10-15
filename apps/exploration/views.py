@@ -200,7 +200,7 @@ def edit_knowledge_base(request, template_name="exploration/edit.html"):
     group, bridge = group_and_bridge(request)
     ctx = group_context(group, bridge)
     
-    context, objects, attributes = prepare_data_for_edit(group)
+    objects, attributes = prepare_data_for_edit(group)
     data_dictionary = {
         "objects" : objects,
         "attributes" : attributes,
@@ -218,11 +218,13 @@ def implications(request, template_name="exploration/implications.html"):
     open_implications = ExplorationWrapper.get_open_implications(group)
     # open_implications = [open_implications_generator.next() for _ in xrange(10)]
     confirmed_implications = ExplorationWrapper.get_background_knowledge(group)
+    attributes = group.content_objects(FAttribute)
 
     data_dictionary = {
         "project" : group,
         "open_implications" : open_implications,
         "confirmed_implications" : confirmed_implications,
+        "attributes" : attributes,
     }
     return render_to_response(template_name, 
                               data_dictionary, 
@@ -238,6 +240,19 @@ def get_intent(request):
         attributes_ids = [attr.pk for attr in attributes]
         return HttpResponse(simplejson.dumps(attributes_ids, ensure_ascii=False), 
                                 mimetype='application/json')
+    else:
+        raise Http404
+
+@login_required
+def get_premise(request):
+    """AJAX"""
+    group, bridge = group_and_bridge(request)
+
+    if request.method == 'POST':
+        imp_pk = request.POST['imp_pk']
+        attributes_ids = ExplorationWrapper.get_premise(group, int(imp_pk))
+
+        return HttpResponse(simplejson.dumps(list(attributes_ids), ensure_ascii=False), mimetype='application/json')
     else:
         raise Http404
 
@@ -283,6 +298,30 @@ def unconfirm_implication(request):
         pk = request.POST['pk']
         ExplorationWrapper.unconfirm_implication(group, pk)
         return HttpResponseRedirect(bridge.reverse('implications', group))
+    else:
+        raise Http404
+
+@login_required
+def reject_implication(request):
+    group, bridge = group_and_bridge(request)
+
+    if request.method == 'POST':
+        try:
+            object_name = request.POST['example_name']
+            if len(object_name) == 0:
+                raise Exception("Object's name can't be empty")
+            imp_pk = int(request.POST['imp_pk'])
+            intent = set()
+            for key in request.POST:
+                if key != 'example_name' and key != 'imp_pk':
+                    intent.add(int(key))
+            premise = ExplorationWrapper.get_premise(group, int(imp_pk))
+            ExplorationWrapper.reject_implication_with_counterexample(group, imp_pk, object_name, premise | intent)
+            status = 'ok'
+        except Exception as details:
+            status = str(details)
+        return HttpResponse(simplejson.dumps({'status' : status}, ensure_ascii=False), 
+                            mimetype='application/json')
     else:
         raise Http404
 

@@ -5,6 +5,24 @@
 
 {% block body %}
 
+<div style="display:none">
+    <form id="counterexample_form" method="post" action="">
+            <input type="hidden" id="imp_pk" name="imp_pk" value=""/>
+        <p>
+            <label for="example_name">Name: </label>
+            <input type="text" id="example_name" name="example_name" size="30" />
+        </p>
+        <p>
+        {% for attr in attributes %}
+            <input type="checkbox" class="attribute-input" name="{{ attr.pk }}" />{{ attr.name }}</br>
+        {% endfor %}
+        </p>
+        <p>
+            <input type="submit" value="Submit" />
+        </p>
+    </form>
+</div>
+
 <h1>Implications</h1>
 
 <div class="implication-table">
@@ -64,7 +82,7 @@
     </table>
     </td>
     <td>
-        <a id="{{ imp.pk }}" class="confirm-imp" href="#">Confirm</a></br><a id="{{ imp.pk }}" class="reject-imp" href="#">Reject</a>
+        <a id="{{ imp.pk }}" class="confirm-imp" href="#">Confirm</a></br><a id="{{ imp.pk }}" class="reject-imp" href="#counterexample_form">Reject</a>
     </td>
     </tr>
 {% endfor %}

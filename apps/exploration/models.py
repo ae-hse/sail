@@ -5,7 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 
 class FAttribute(models.Model):
     """FObject stands for formal object"""
-    name = models.CharField(_('name'), max_length=200)
+    name = models.CharField(_('name'), max_length=200, blank=False)
     description = models.TextField(_('description'), blank=True)
 
     # we can built hierarchies of objects
@@ -26,7 +26,7 @@ class FAttribute(models.Model):
 
 class FObject(models.Model):
     """FObject stands for formal object"""
-    name = models.CharField(_('name'), max_length=200)
+    name = models.CharField(_('name'), max_length=200, blank=False)
     description = models.TextField(_('description'), blank=True)
     attributes = models.ManyToManyField(FAttribute, blank=True)
     

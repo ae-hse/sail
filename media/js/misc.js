@@ -102,3 +102,43 @@ $("a.unconfirm-imp").click(function(e) {
 			}
 	);
 });
+
+// Rejection
+$(document).ready(function() {
+	$("a.reject-imp").each(function() {
+	  var imp_pk = this.id;
+	  $(this).fancybox({
+	        'scrolling'		: 'no',
+			'titleShow'		: false,
+	        'onStart' : function() {
+	        	$("#imp_pk").val(imp_pk);
+	        	$.post("getpremise", {imp_pk: imp_pk},
+	        	function(data) {
+	        		$(".attribute-input").each(function(index) {
+				if (data.indexOf(parseInt($(this).attr("name"))) != -1) {
+					$(this).prop("checked", true)
+					$(this).prop("disabled", true)
+				}
+			});
+	        	}
+	        	);
+	        }
+	  });
+	});
+});
+
+$("#counterexample_form").bind("submit", function() {
+
+	$.fancybox.showActivity();
+
+	$.post("rejectimplication", $(this).serializeArray(),
+			function(data) {
+				if (data['status'] != 'ok') {
+					alert(data['status']);
+			}
+			document.location.href = document.location.href;
+		}
+	);
+
+	return false;
+});

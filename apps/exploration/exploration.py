@@ -137,10 +137,20 @@ class DBContext(fca.Context):
         obj = self.group.content_objects(FObject).get(pk=name)
         return set([attr.pk for attr in obj.attributes.all()])
 
+    def add_object_with_intent(self, intent, name):
+        obj = FObject(name=name, group=self.group)
+        obj.save()
+        get_attr = lambda name: self.group.content_objects(FAttribute).get(pk=name)
+        obj.attributes.add(*[get_attr(pk) for pk in intent])
+
 class WebExpert(object):
 
+    def set_counterexample(self, example, intent):
+        self.example = example
+        self.intent = intent
+
     def provide_counterexample(self, imp):
-        pass
+        return (self.example, self.intent)
 
 class WebExploration(AttributeExploration):
 
@@ -150,10 +160,15 @@ class WebExploration(AttributeExploration):
         super(WebExploration, self).__init__(db, expert)
 
     def confirm_implication(self, imp_pk):
-        super(WebExploration, self).confirm_implication(self.db.open_implications[imp_pk])
+        imp = self.db.open_implications[imp_pk]
+        super(WebExploration, self).confirm_implication(imp)
 
     def unconfirm_implication(self, imp_pk):
         super(WebExploration, self).unconfirm_implication(AttributeImplication.objects.get(pk=imp_pk))
+
+    def reject_implication(self, imp_pk):
+        imp = self.db.open_implications[imp_pk]
+        super(WebExploration, self).reject_implication(imp)
 
 class ExplorationWrapper(object):
 
@@ -172,15 +187,24 @@ class ExplorationWrapper(object):
     @classmethod
     def get_open_implications(cls, group):
         attributes = {attr.pk : attr.name for attr in group.content_objects(FAttribute)}
-        return cls.get_exploration(group).get_open_implications().get_query_set(attributes)
+        return cls.get_exploration(group).db.open_implications.get_query_set(attributes)
 
     @classmethod
     def confirm_implication(cls, group, imp_pk):
         cls.get_exploration(group).confirm_implication(imp_pk)
 
     @classmethod
+    def get_premise(cls, group, imp_pk):
+        return cls.get_exploration(group).db.open_implications[imp_pk].premise
+
+    @classmethod
     def unconfirm_implication(cls, group, imp_pk):
         cls.get_exploration(group).unconfirm_implication(imp_pk)
+
+    @classmethod
+    def reject_implication_with_counterexample(cls, group, imp_pk, example, intent):
+        cls.get_exploration(group).expert.set_counterexample(example, intent)
+        cls.get_exploration(group).reject_implication(imp_pk)
 
     @classmethod
     def get_background_knowledge(cls, group):
