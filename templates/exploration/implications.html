@@ -29,13 +29,13 @@
 <h2>Background Knowledge</h2>
 
 <table>
-<tr>
+<tr style="background-color: #99BBCC">
     <th>Premise</th>
     <th>Conclusion</th>
     <th>Controls</th>
 </tr>
 {% for imp in confirmed_implications %}
-    <tr>
+    <tr style="background-color: {% cycle '#FFFFFF' '#99BBCC' as rowcolor %}">
     <td>
     <table style="border: 0px;">
     {% for attr in imp.premise.all %}
