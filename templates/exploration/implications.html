@@ -51,7 +51,8 @@
     </table>
     </td>
     <td>
-        <a id="{{ imp.pk }}" class="unconfirm-imp" href="#">Unconfirm</a>
+        <a id="{{ imp.pk }}" class="unconfirm-imp" href="#">
+		<img src="/site_media/static/img/unconfirm.png" alt="Unconfirm"/></a>
     </td>
     </tr>
 {% endfor %}
@@ -60,13 +61,13 @@
 <h2>Open Implications</h2>
 
 <table>
-<tr>
+<tr style="background-color: #99BBCC">
     <th>Premise</th>
     <th>Conclusion</th>
     <th>Controls</th>
 </tr>
 {% for imp in open_implications %}
-    <tr>
+    <tr style="background-color: {% cycle '#FFFFFF' '#99BBCC' as rowcolor %}">
     <td>
     <table style="border: 0px;">
     {% for attr in imp.premise %}
@@ -82,7 +83,10 @@
     </table>
     </td>
     <td>
-        <a id="{{ imp.pk }}" class="confirm-imp" href="#">Confirm</a></br><a id="{{ imp.pk }}" class="reject-imp" href="#counterexample_form">Reject</a>
+        <a id="{{ imp.pk }}" class="confirm-imp" href="#">
+		<img src="/site_media/static/img/confirm.png" alt="Confirm"/></a>
+		<a id="{{ imp.pk }}" class="reject-imp" href="#counterexample_form">
+		<img src="/site_media/static/img/reject.png" alt="Reject"/></a>
     </td>
     </tr>
 {% endfor %}
