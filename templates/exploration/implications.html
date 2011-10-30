@@ -28,69 +28,134 @@
 <div class="implication-table">
 <h2>Background Knowledge</h2>
 
-<table>
-<tr style="background-color: #99BBCC">
-    <th>Premise</th>
-    <th>Conclusion</th>
-    <th>Controls</th>
-</tr>
-{% for imp in confirmed_implications %}
-    <tr style="background-color: {% cycle '#FFFFFF' '#99BBCC' as rowcolor %}">
-    <td>
-    <table style="border: 0px;">
-    {% for attr in imp.premise.all %}
-        {{ attr.name }}<br/>
-    {% endfor %}
-    </table>
-    </td>
-    <td>
-    <table>
-    {% for attr in imp.conclusion.all %}
-        {{ attr.name }}<br/>
-    {% endfor %}
-    </table>
-    </td>
-    <td>
-        <a id="{{ imp.pk }}" class="unconfirm-imp" href="#">
-		<img src="/site_media/static/img/unconfirm.png" alt="Unconfirm"/></a>
-    </td>
-    </tr>
-{% endfor %}
-</table>
+{% if confirmed_implications or confirmed_existence_implications %}
+	{% if confirmed_implications %}
+		<table>
+		<tr style="background-color: #99BBCC">
+			<th>IF</th>
+			<th>THEN</th>
+			<th>Controls</th>
+		</tr>
+		{% for imp in confirmed_implications %}
+			<tr style="background-color: {% cycle '#FFFFFF' '#99BBCC' as rowcolor %}">
+			<td>
+			<table style="border: 0px;">
+			{% for attr in imp.premise.all %}
+				{{ attr.name }}<br/>
+			{% endfor %}
+			</table>
+			</td>
+			<td>
+			<table>
+			{% for attr in imp.conclusion.all %}
+				{{ attr.name }}<br/>
+			{% endfor %}
+			</table>
+			</td>
+			<td>
+				<a id="{{ imp.pk }}" class="unconfirm-imp" href="#">
+				<img src="/site_media/static/img/unconfirm.png" alt="Unconfirm"/></a>
+			</td>
+			</tr>
+		{% endfor %}
+		</table>
+	{% endif %}
+	
+	{% if confirmed_existence_implications %}
+		<table>
+		<tr style="background-color: #99BBCC">
+			<th>Can these attributes appear together?</th>
+			<th>Controls</th>
+		</tr>
+		{% for imp in confirmed_existence_implications %}
+			<tr style="background-color: {% cycle '#FFFFFF' '#99BBCC' as rowcolor %}">
+			<td>
+			<table style="border: 0px;">
+			{% for attr in imp.premise %}
+				{{ attr }}<br/>
+			{% endfor %}
+			</table>
+			</td>
+			<td>
+				<a id="{{ imp.pk }}" class="confirm-imp" href="#">
+				<img src="/site_media/static/img/confirm.png" alt="Confirm"/></a>
+				<a id="{{ imp.pk }}" class="reject-imp" href="#counterexample_form">
+				<img src="/site_media/static/img/reject.png" alt="Reject"/></a>
+			</td>
+			</tr>
+		{% endfor %}
+		</table>
+	{% endif %}
+{% else %}
+	There is no background knowledge.
+{% endif %}
 
 <h2>Open Implications</h2>
 
-<table>
-<tr style="background-color: #99BBCC">
-    <th>Premise</th>
-    <th>Conclusion</th>
-    <th>Controls</th>
-</tr>
-{% for imp in open_implications %}
-    <tr style="background-color: {% cycle '#FFFFFF' '#99BBCC' as rowcolor %}">
-    <td>
-    <table style="border: 0px;">
-    {% for attr in imp.premise %}
-        {{ attr }}<br/>
-    {% endfor %}
-    </table>
-    </td>
-    <td>
-    <table>
-    {% for attr in imp.conclusion %}
-        {{ attr }}<br/>
-    {% endfor %}
-    </table>
-    </td>
-    <td>
-        <a id="{{ imp.pk }}" class="confirm-imp" href="#">
-		<img src="/site_media/static/img/confirm.png" alt="Confirm"/></a>
-		<a id="{{ imp.pk }}" class="reject-imp" href="#counterexample_form">
-		<img src="/site_media/static/img/reject.png" alt="Reject"/></a>
-    </td>
-    </tr>
-{% endfor %}
-</table>
+{% if open_implications or open_existence_implications %}
+	{% if open_implications %}
+		<table>
+		<tr style="background-color: #99BBCC">
+			<th>IF</th>
+			<th>THEN</th>
+			<th>Controls</th>
+		</tr>
+		{% for imp in open_implications %}
+			<tr style="background-color: {% cycle '#FFFFFF' '#99BBCC' as rowcolor %}">
+			<td>
+			<table style="border: 0px;">
+			{% for attr in imp.premise %}
+				{{ attr }}<br/>
+			{% endfor %}
+			</table>
+			</td>
+			<td>
+			<table>
+			{% for attr in imp.conclusion %}
+				{{ attr }}<br/>
+			{% endfor %}
+			</table>
+			</td>
+			<td>
+				<a id="{{ imp.pk }}" class="confirm-imp" href="#">
+				<img src="/site_media/static/img/confirm.png" alt="Confirm"/></a>
+				<a id="{{ imp.pk }}" class="reject-imp" href="#counterexample_form">
+				<img src="/site_media/static/img/reject.png" alt="Reject"/></a>
+			</td>
+			</tr>
+		{% endfor %}
+		</table>
+	{% endif %}
+	
+	{% if open_existence_implications %}
+		<table>
+		<tr style="background-color: #99BBCC">
+			<th>Can these attributes appear together?</th>
+			<th>Controls</th>
+		</tr>
+		{% for imp in open_existence_implications %}
+			<tr style="background-color: {% cycle '#FFFFFF' '#99BBCC' as rowcolor %}">
+			<td>
+			<table style="border: 0px;">
+			{% for attr in imp.premise %}
+				{{ attr }}<br/>
+			{% endfor %}
+			</table>
+			</td>
+			<td>
+				<a id="{{ imp.pk }}" class="confirm-imp" href="#">
+				<img src="/site_media/static/img/confirm.png" alt="Confirm"/></a>
+				<a id="{{ imp.pk }}" class="reject-imp" href="#counterexample_form">
+				<img src="/site_media/static/img/reject.png" alt="Reject"/></a>
+			</td>
+			</tr>
+		{% endfor %}
+		</table>
+	{% endif %}
+{% else %}
+	There are no open implications.
+{% endif %}
+
 </div>
 
 {% endblock %}
