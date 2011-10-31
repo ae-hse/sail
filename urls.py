@@ -6,7 +6,6 @@ from django.contrib import admin
 admin.autodiscover()
 
 from tagging.models import TaggedItem
-from wakawaka.models import WikiPage
 
 from pinax.apps.account.openid_consumer import PinaxConsumer
 from projects.models import Project
@@ -44,12 +43,6 @@ tagged_models = (
     ),
     dict(title="Project Topics",
         query=lambda tag: TaggedItem.objects.get_by_model(ProjectTopic, tag),
-    ),
-    dict(title="Project Tasks",
-        query=lambda tag: TaggedItem.objects.get_by_model(Task, tag),
-    ),
-    dict(title="Wiki Articles",
-        query=lambda tag: TaggedItem.objects.get_by_model(WikiPage, tag),
     ),
 )
 tagging_ext_kwargs = {

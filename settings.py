@@ -165,7 +165,6 @@ INSTALLED_APPS = [
     "ajax_validation",
     "tagging",
     "uni_form",
-    "wakawaka",
     "django_sorting",
     "attachments",
     "django_markup",
@@ -178,7 +177,6 @@ INSTALLED_APPS = [
     "pinax.apps.analytics",
     "pinax.apps.tagging_utils",
     "pinax.apps.threadedcomments_extras",
-    "pinax.apps.tasks",
     "pinax.apps.topics",
     
     # project
