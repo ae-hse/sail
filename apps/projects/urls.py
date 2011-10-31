@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 
-from pinax.apps.projects.models import Project
+from projects.models import Project
 
 from groups.bridge import ContentBridge
 
@@ -9,7 +9,7 @@ from groups.bridge import ContentBridge
 bridge = ContentBridge(Project)
 
 
-urlpatterns = patterns("pinax.apps.projects.views",
+urlpatterns = patterns("projects.views",
     url(r"^$", "projects", name="project_list"),
     url(r"^create/$", "create", name="project_create"),
     url(r"^your_projects/$", "your_projects", name="your_projects"),

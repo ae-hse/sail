@@ -178,13 +178,13 @@ INSTALLED_APPS = [
     "pinax.apps.analytics",
     "pinax.apps.tagging_utils",
     "pinax.apps.threadedcomments_extras",
-    "pinax.apps.projects",
     "pinax.apps.tasks",
     "pinax.apps.topics",
     
     # project
     "about",
     "profiles",
+    "projects",
     
     # exploration
     "exploration",

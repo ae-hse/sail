@@ -1,6 +1,6 @@
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from django.http import Http404, HttpResponseRedirect, HttpResponse
+from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.utils import simplejson
@@ -47,6 +47,11 @@ def knowledge_base(request, template_name="exploration/kb.html"):
     """
     group, bridge = group_and_bridge(request)
     ctx = group_context(group, bridge)
+
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
     
     filter_list = request.GET.getlist("a")
     now_filtering = len(filter_list) != 0
@@ -83,6 +88,11 @@ def import_context_view(request, template_name="exploration/import.html"):
     """docstring for import_context"""
     group, bridge = group_and_bridge(request)
     ctx = group_context(group, bridge)
+
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
     
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -104,6 +114,11 @@ def import_context_view(request, template_name="exploration/import.html"):
 def object_details(request, id, template_name="exploration/objects/details.html"):
     group, bridge = group_and_bridge(request)
     ctx = group_context(group, bridge)
+
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
     
     object_ = get_object_or_404(FObject, pk=id)
     data_dictionary = {
@@ -118,6 +133,11 @@ def object_details(request, id, template_name="exploration/objects/details.html"
 def object_new(request, template_name="exploration/objects/new.html"):
     group, bridge = group_and_bridge(request)
     ctx = group_context(group, bridge)
+
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
 
     if request.method == 'POST':
         form = ObjectForm(request.POST)
@@ -147,6 +167,11 @@ def attribute_new(request, template_name="exploration/attributes/new.html"):
     group, bridge = group_and_bridge(request)
     ctx = group_context(group, bridge)
 
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
+
     if request.method == 'POST':
         form = AttributeForm(request.POST)
         if form.is_valid():
@@ -171,6 +196,11 @@ def attribute_new(request, template_name="exploration/attributes/new.html"):
 def object_edit(request, id, template_name="exploration/objects/edit.html"):
     group, bridge = group_and_bridge(request)
     ctx = group_context(group, bridge)
+
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
     
     object_ = get_object_or_404(FObject, pk=id)
     if request.method == 'POST':
@@ -199,6 +229,11 @@ def edit_knowledge_base(request, template_name="exploration/edit.html"):
     """Edit knowledge base view"""
     group, bridge = group_and_bridge(request)
     ctx = group_context(group, bridge)
+
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
     
     objects, attributes = prepare_data_for_edit(group)
     data_dictionary = {
@@ -214,6 +249,11 @@ def edit_knowledge_base(request, template_name="exploration/edit.html"):
 def implications(request, template_name="exploration/implications.html"):
     group, bridge = group_and_bridge(request)
     ctx = group_context(group, bridge)
+
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
 
     open_implications = ExplorationWrapper.get_open_implications(group)
     # open_implications = [open_implications_generator.next() for _ in xrange(10)]
@@ -233,6 +273,13 @@ def implications(request, template_name="exploration/implications.html"):
 @login_required
 def get_intent(request):
     """AJAX"""
+    group, bridge = group_and_bridge(request)
+
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
+
     if request.method == 'POST':
         pk = request.POST['pk']
         object = FObject.objects.get(pk=pk)
@@ -248,6 +295,11 @@ def get_premise(request):
     """AJAX"""
     group, bridge = group_and_bridge(request)
 
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
+
     if request.method == 'POST':
         imp_pk = request.POST['imp_pk']
         attributes_ids = ExplorationWrapper.get_premise(group, int(imp_pk))
@@ -260,6 +312,11 @@ def get_premise(request):
 def submit_intent(request):
     """AJAX"""
     group, bridge = group_and_bridge(request)
+
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
 
     if request.method == 'POST':
         object_pk = int(request.POST['pk'])
@@ -279,6 +336,11 @@ def confirm_implication(request):
     """AJAX"""
     group, bridge = group_and_bridge(request)
 
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
+
     if request.method == 'POST':
         pk = request.POST['pk']
         try:
@@ -294,6 +356,11 @@ def confirm_implication(request):
 def unconfirm_implication(request):
     group, bridge = group_and_bridge(request)
 
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
+
     if request.method == 'POST':
         pk = request.POST['pk']
         ExplorationWrapper.unconfirm_implication(group, pk)
@@ -304,6 +371,11 @@ def unconfirm_implication(request):
 @login_required
 def reject_implication(request):
     group, bridge = group_and_bridge(request)
+
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
 
     if request.method == 'POST':
         try:
@@ -328,6 +400,11 @@ def reject_implication(request):
 @login_required
 def export_context(request):
     group, bridge = group_and_bridge(request)
+
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
 
     response = HttpResponse(mimetype='text/csv')
     response['Content-Disposition'] = \

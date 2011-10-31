@@ -9,7 +9,7 @@ from tagging.models import TaggedItem
 from wakawaka.models import WikiPage
 
 from pinax.apps.account.openid_consumer import PinaxConsumer
-from pinax.apps.projects.models import Project
+from projects.models import Project
 from pinax.apps.tasks.models import Task
 from pinax.apps.topics.models import Topic as ProjectTopic
 

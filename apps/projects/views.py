@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.utils.datastructures import SortedDict
@@ -125,6 +125,9 @@ def project(request, group_slug=None, form_class=ProjectUpdateForm, adduser_form
         is_member = False
     else:
         is_member = project.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
     
     action = request.POST.get("action")
     if request.user == project.creator and action == "update":
