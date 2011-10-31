@@ -28,7 +28,7 @@
     {% for attr in filter_list %}
       {% if forloop.last %}
       <a href="javascript:history.go(-1)">{{ attr }}</a>
-      <img id="cross" src="/site_media/static/img/cross.png" alt=""/>
+      <img id="cross" src="{{ STATIC_URL }}img/cross.png" alt=""/>
       {% else %}
       {{ attr }} |
       {% endif %}
