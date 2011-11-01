@@ -16,6 +16,7 @@ urlpatterns = patterns("",
     # AJAX
     url(r"^getintent$", "exploration.views.get_intent", name="get_intent"),
     url(r"^getpremise$", "exploration.views.get_premise", name="get_premise"),
+    url(r"^getconclusion$", "exploration.views.get_conclusion", name="get_conclusion"),
     url(r"^submitintent$", "exploration.views.submit_intent", name="submit_intent"),
     url(r"^confirmimplication$", "exploration.views.confirm_implication", name="confirm_implication"),
     url(r"^unconfirmimplication$", "exploration.views.unconfirm_implication", name="unconfirm_implication"),
