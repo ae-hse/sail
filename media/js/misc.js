@@ -143,6 +143,36 @@ $("#counterexample_form").bind("submit", function() {
 	return false;
 });
 
+$("a.tune_imp").click(function(e) {
+    var attr = encodeURIComponent($(this).attr("id"));
+    var search_par = parseGetParams();
+    var search_new = "";
+    for (var i = 0; i < search_par.length; i++) {
+        if (search_par[i] != attr) {
+            if (search_new != "") {
+                search_new = search_new + "&";
+            }
+            search_new = search_new + "a=" + search_par[i];
+        }
+    }
+    
+    if (search_new != "") {
+        search_new = "?" + search_new;
+    }
+
+    window.location.search = search_new;
+    
+    function parseGetParams() {
+        var res = [];
+        var __GET = window.location.search.substring(1).split("&");
+        for(var i = 0; i <__GET.length; i++) {
+            var getVar = __GET[i].split("=");
+            res.push(getVar[1]);            
+        }
+        return res
+    }
+});
+
 $(document).ajaxSend(function(event, xhr, settings) {
     function getCookie(name) {
         var cookieValue = null;

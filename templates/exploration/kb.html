@@ -21,21 +21,29 @@
 {% endif %}
 {% endspaceless %}</h1>
 
+{% if filtering %}
+	<h2>Filtered by attributes</h2>
+	<div id="filter_list">
+    <!--
+		{% for attr in filter_list %}
+			{% if forloop.last %}
+				<a href="javascript:history.go(-1)">{{ attr }}</a>
+				<img id="cross" src="{{ STATIC_URL }}img/cross.png" alt=""/>
+			{% else %}
+				{{ attr }} |
+			{% endif %}
+		{% endfor %}
+        -->
+        {% for attr in filter_list %}                
+				<!--<a id="{{attr}}" href="javascript:tune_filter()">{{ attr }}</a>-->
+                <a id="{{attr}}" class="tune_imp">{{ attr }}</a>
+				<img id="cross" src="{{ STATIC_URL }}img/cross.png" alt="Remove"/>
+		{% endfor %}
+	</div>
+{% endif %}
+
 <div id="objects">
-  <h2>Objects</h2>
-  {% if filtering %}
-  <div id="filter_list">
-    {% for attr in filter_list %}
-      {% if forloop.last %}
-      <a href="javascript:history.go(-1)">{{ attr }}</a>
-      <img id="cross" src="{{ STATIC_URL }}img/cross.png" alt=""/>
-      {% else %}
-      {{ attr }} |
-      {% endif %}
-    {% endfor %}
-  </div>
-  {% endif %}
-  
+  <h2>Objects</h2>  
     {% for object in objects %}
     <div class="object">
       <a href="{% groupurl object_details project id=object.id %}">{{ object.name }}</a>
