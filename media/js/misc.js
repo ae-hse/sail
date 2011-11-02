@@ -81,7 +81,7 @@ function confirm_object_delete() {
 	}
 }
 
-$("a.unconfirm-imp").click(function(e) {
+$("a.unconfirm-imp").click(function(event) {
 	event.preventDefault();
 	imp_pk = $(this).attr("id")
 
