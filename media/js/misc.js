@@ -152,7 +152,9 @@ $("#counterexample_form").bind("submit", function() {
 	return false;
 });
 
-$("a.tune_imp").click(function(e) {
+$("a.tune_imp").click(function(event) {
+    event.preventDefault();
+    
     var attr = encodeURIComponent($(this).attr("id"));
     var search_par = parseGetParams();
     var search_new = "";
