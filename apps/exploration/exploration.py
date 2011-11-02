@@ -186,7 +186,12 @@ class ExplorationWrapper(object):
 
     @classmethod
     def get_open_implications(cls, group):
+        # To find relative basis (open implications) we treat attributes as
+        # primary keys of corresponding attributes in database. Therefore we
+        # need to translate them to readable format.
         attributes = {attr.pk : attr.name for attr in group.content_objects(FAttribute)}
+        # open_implications is object of class ImplicationsList (also defined
+        # in this module)
         return cls.get_exploration(group).db.open_implications.get_query_set(attributes)
 
     @classmethod
