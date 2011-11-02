@@ -114,14 +114,23 @@ $(document).ready(function() {
 	        	$("#imp_pk").val(imp_pk);
 	        	$.post("getpremise", {imp_pk: imp_pk},
 	        	function(data) {
+                    if (data == "reload") {
+                        document.location.href = document.location.href;
+                    }
 	        		$(".attribute-input").each(function(index) {
-				if (data.indexOf(parseInt($(this).attr("name"))) != -1) {
-					$(this).prop("checked", true)
-					$(this).prop("disabled", true)
-				}
-			});
-	        	}
-	        	);
+				        if (data.indexOf(parseInt($(this).attr("name"))) != -1) {
+					       $(this).prop("checked", true)
+					       $(this).prop("disabled", true)
+				        }
+			     });
+	        	});
+                $.post("getconclusion", {imp_pk: imp_pk},
+                function(data) {
+                    if (data == "reload") {
+                        document.location.href = document.location.href;
+                    }
+                    
+                });
 	        }
 	  });
 	});

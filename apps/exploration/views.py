@@ -302,7 +302,31 @@ def get_premise(request):
 
     if request.method == 'POST':
         imp_pk = request.POST['imp_pk']
-        attributes_ids = ExplorationWrapper.get_premise(group, int(imp_pk))
+        try:
+            attributes_ids = ExplorationWrapper.get_premise(group, int(imp_pk))
+        except:
+            return HttpResponse("reload")
+
+        return HttpResponse(simplejson.dumps(list(attributes_ids), ensure_ascii=False), mimetype='application/json')
+    else:
+        raise Http404
+
+@login_required
+def get_conclusion(request):
+    """AJAX"""
+    group, bridge = group_and_bridge(request)
+
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
+
+    if request.method == 'POST':
+        imp_pk = request.POST['imp_pk']
+        try:
+            attributes_ids = ExplorationWrapper.get_conclusion(group, int(imp_pk))
+        except:
+            return HttpResponse("reload")
 
         return HttpResponse(simplejson.dumps(list(attributes_ids), ensure_ascii=False), mimetype='application/json')
     else:

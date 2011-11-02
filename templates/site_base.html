@@ -12,7 +12,7 @@
     {% block extra_head %}{% endblock %}
 {% endblock %}
 
-{% block logo_link_image %}<a href="{% url home %}"><img src="{{ STATIC_URL }}pinax/img/logo.png" alt="Pinax"/></a>{% endblock %}
+{% block logo_link_image %}<div style="padding:30px"><a href="{% url home %}" style="font-size:24px;font-family:Arial;font-weight:bold;color:white;text-decoration:none;ali">Exploration</a></div>{% endblock %}
 
 {% block login %}
     {% include "_account_bar.html" %}
@@ -30,7 +30,7 @@
 
 {% block footer %}
 <div class="legal">
-    {% trans "&copy; 2010 &lt;your company here&gt;" %}
+    {% trans "&copy; 2011 &lt;Higher School of Economics, Moscow&gt;" %}
     - <a href="{% url about %}">{% trans "About" %}</a>
     - <a href="{% url terms %}">{% trans "Terms of Service" %}</a>
     - <a href="{% url privacy %}">{% trans "Privacy Policy" %}</a>

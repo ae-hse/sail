@@ -6,7 +6,7 @@
 {% block subnav %}
     {% if user.is_authenticated %}
         <ul>
-        <li><a href="{% groupurl implications group %}">{% trans "Implications" %}</a></li>
+        <li><a href="{% groupurl implications group %}">{% trans "Questions" %}</a></li>
           <li><a href="{% groupurl object_new group %}">{% trans "New Object" %}</a></li>
           <li><a href="{% groupurl attribute_new group %}">{% trans "New Attribute" %}</a></li>
           <li><a href="{% groupurl edit_kb group %}">{% trans "Edit" %}</a></li>

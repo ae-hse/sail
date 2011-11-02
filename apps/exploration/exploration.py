@@ -198,6 +198,10 @@ class ExplorationWrapper(object):
         return cls.get_exploration(group).db.open_implications[imp_pk].premise
 
     @classmethod
+    def get_conclusion(cls, group, imp_pk):
+        return cls.get_exploration(group).db.open_implications[imp_pk].conclusion
+
+    @classmethod
     def unconfirm_implication(cls, group, imp_pk):
         cls.get_exploration(group).unconfirm_implication(imp_pk)
 

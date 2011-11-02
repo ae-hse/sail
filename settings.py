@@ -225,13 +225,14 @@ LOGIN_REDIRECT_URLNAME = "what_next"
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
 
-# URCHIN_ID = "ua-..."
-
 DEBUG_TOOLBAR_CONFIG = {
     "INTERCEPT_REDIRECTS": False,
 }
 
 PROFILE_LOG_BASE = os.path.join(PROJECT_ROOT, "logs")
+
+SITE_NAME = "Exploration"
+CONTACT_EMAIL = "romashkin.nikita@gmail.com"
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.
