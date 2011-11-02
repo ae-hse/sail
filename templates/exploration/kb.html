@@ -23,19 +23,8 @@
 
 {% if filtering %}
 	<h2>Filtered by attributes</h2>
-	<div id="filter_list">
-    <!--
-		{% for attr in filter_list %}
-			{% if forloop.last %}
-				<a href="javascript:history.go(-1)">{{ attr }}</a>
-				<img id="cross" src="{{ STATIC_URL }}img/cross.png" alt=""/>
-			{% else %}
-				{{ attr }} |
-			{% endif %}
-		{% endfor %}
-        -->
-        {% for attr in filter_list %}                
-				<!--<a id="{{attr}}" href="javascript:tune_filter()">{{ attr }}</a>-->
+	<div id="filter_list">    
+        {% for attr in filter_list %}                				
                 <a id="{{attr}}" class="tune_imp">{{ attr }}</a>
 				<img id="cross" src="{{ STATIC_URL }}img/cross.png" alt="Remove"/>
 		{% endfor %}
