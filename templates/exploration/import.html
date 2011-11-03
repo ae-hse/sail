@@ -1,6 +1,9 @@
 {% extends "exploration/base.html" %}
 
+{% load i18n %}
 {% load group_tags %}
+
+{% block head_title %}{% trans "Import" %}{% endblock %}
 
 {% block body %}
 	<form enctype="multipart/form-data" method="post" action="{% groupurl import_context group %}">
