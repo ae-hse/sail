@@ -26,3 +26,19 @@ div.implication-table table, tr, td, th{
     border: 0px none;
     padding: 4px;
 }
+
+div.imp-conclusion, div.imp-premise {
+    margin: 5px; 
+    padding: 2px; 
+    float: left; 
+    border-style: solid; 
+    border-width: 1px;
+}
+
+div.imp-premise {
+    background-color: #9CBBEB;
+}
+
+div.imp-conclusion {
+    background-color: #D1DFC9;
+}

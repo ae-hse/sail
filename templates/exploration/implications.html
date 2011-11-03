@@ -31,26 +31,22 @@
 {% if confirmed_implications or confirmed_existence_implications %}
 	{% if confirmed_implications %}
 		<table>
-		<tr style="background-color: #99BBCC">
+		<tr style="background-color: #F0F7FF">
 			<th>IF</th>
 			<th>THEN</th>
 			<th></th>
 		</tr>
 		{% for imp in confirmed_implications %}
-			<tr style="background-color: {% cycle '#FFFFFF' '#99BBCC' as rowcolor %}">
+			<tr style="background-color: {% cycle '#DDEEFF' '#F0F7FF' as rowcolor %}">
 			<td>
-			<table>
 			{% for attr in imp.premise.all %}
-				<td title="{{ attr.description }}">{{ attr.name }}</td>
+				<div class="imp-premise" title="{{ attr.description }}">{{ attr.name }}</div>
 			{% endfor %}
-			</table>
 			</td>
 			<td>
-			<table>
 			{% for attr in imp.conclusion.all %}
-				<td title="{{ attr.description }}">{{ attr.name }}</td>
+				<div class="imp-conclusion" title="{{ attr.description }}">{{ attr.name }}</div>
 			{% endfor %}
-			</table>
 			</td>
 			<td>
 				<a id="{{ imp.pk }}" class="unconfirm-imp" href="#">
@@ -63,12 +59,12 @@
 	
 	{% if confirmed_existence_implications %}
 		<table>
-		<tr style="background-color: #99BBCC">
-			<th>Can these attributes appear together?</th>
+		<tr style="background-color: #F0F7FF">
+			<th>These attributes cannot occur together</th>
 			<th></th>
 		</tr>
 		{% for imp in confirmed_existence_implications %}
-			<tr style="background-color: {% cycle '#FFFFFF' '#99BBCC' as rowcolor %}">
+			<tr style="background-color: {% cycle '#DDEEFF' '#F0F7FF' as rowcolor %}">
 			<td>
 			<table style="border: 0px;">
 			{% for attr in imp.premise.all %}
@@ -88,31 +84,29 @@
 	There are no known facts.
 {% endif %}
 
+<hr/>
+
 <h2>Open Questions</h2>
 
 {% if open_implications or open_existence_implications %}
 	{% if open_implications %}
 		<table>
-		<tr style="background-color: #99BBCC">
+		<tr style="background-color: #F0F7FF">
 			<th>IF</th>
 			<th>THEN</th>
 			<th></th>
 		</tr>
 		{% for imp in open_implications %}
-			<tr style="background-color: {% cycle '#FFFFFF' '#99BBCC' as rowcolor %}">
+			<tr style="background-color: {% cycle '#DDEEFF' '#F0F7FF' as rowcolor %}">
 			<td>
-			<table>
 			{% for attr in imp.premise %}
-				<td title="{{ attr.description }}">{{ attr }}</td>
+				<div class="imp-premise">{{ attr }}</div>
 			{% endfor %}
-			</table>
 			</td>
 			<td>
-			<table>
 			{% for attr in imp.conclusion %}
-				<td title="{{ attr.description }}">{{ attr }}</td>
+				<div class="imp-conclusion">{{ attr }}</div>
 			{% endfor %}
-			</table>
 			</td>
 			<td>
 				<a id="{{ imp.pk }}" class="confirm-imp" href="#">
@@ -127,12 +121,12 @@
 	
 	{% if open_existence_implications %}
 		<table>
-		<tr style="background-color: #99BBCC">
+		<tr style="background-color: #F0F7FF">
 			<th>Can these attributes appear together?</th>
 			<th></th>
 		</tr>
 		{% for imp in open_existence_implications %}
-			<tr style="background-color: {% cycle '#FFFFFF' '#99BBCC' as rowcolor %}">
+			<tr style="background-color: {% cycle '#DDEEFF' '#F0F7FF' as rowcolor %}">
 			<td>
 			<table>
 			{% for attr in imp.premise %}
