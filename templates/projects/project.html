@@ -106,7 +106,16 @@
 
             <h2>Knowledge Base</h2>
             
-            <a href="{% groupurl knowledge_base_index project %}">Go</a> to knowledge base index.
+            You can:
+            
+            <ul>
+                <li><a href="{% groupurl knowledge_base_index project %}">Go</a> to knowledge base index.</li>
+                <li><a href="{% groupurl implications project %}">Review</a> questions</li>
+                <li><a href="{% groupurl edit_kb project %}">Edit</a> objects</li>
+                <li><a href="{% groupurl export_context project %}">Export</a> context as csv file</li>
+                <li><a href="{% groupurl import_context project %}">Import</a> context from cxt file</li>
+            </ul> 
+            
 
             <h2>{% trans "Discussion Topics" %}{% if project.topics.all.count %} ({{ project.topics.all.count }}){% endif %}</h2>
             
