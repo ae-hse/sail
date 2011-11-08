@@ -146,6 +146,7 @@ def object_new(request, template_name="exploration/objects/new.html"):
             if group:
                 group.associate(object_, commit=False)
             object_.save()
+            ExplorationWrapper.touch(group)
             return HttpResponseRedirect(bridge.reverse('object_details', group, {"id" : object_.id}))
         else:
             # TODO: Possibly validation error handling
@@ -180,7 +181,6 @@ def attribute_new(request, template_name="exploration/attributes/new.html"):
                 group.associate(attribute, commit=False)
             attribute.save()
             ExplorationWrapper.touch(group)
-
         return HttpResponseRedirect(bridge.reverse('knowledge_base_index', group))
     else:
         form = AttributeForm()
@@ -208,6 +208,7 @@ def object_edit(request, id, template_name="exploration/objects/edit.html"):
     if request.method == 'POST':
         if 'delete' in request.POST:
             object_.delete()
+            ExplorationWrapper.touch(group)
             return HttpResponseRedirect(bridge.reverse('edit_kb', group))
         else:
             form = ObjectForm(request.POST, instance=object_)
