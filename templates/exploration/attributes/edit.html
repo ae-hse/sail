@@ -1,0 +1,20 @@
+{% extends "exploration/base.html" %}
+
+{% load group_tags %}
+
+{% block body %}
+
+<h1>Edit Attribute</h1>
+<form action="{% groupurl attribute_edit project id=attribute.id %}" method="post">
+	{% csrf_token %}
+	{% include "exploration/attributes/form.html" %}
+	<p><input type="submit" name='save' value="Save Attribute"/></p>
+</form>
+<form action="{% groupurl attribute_edit project id=attribute.id %}" name="deleteForm" method="post">
+	{% csrf_token %}
+	<input type="hidden" name="delete" value="ok">
+	<p><input type="button" value="Delete" onclick="confirm_attribute_delete()"/></p>
+</form>
+<a href="{% groupurl edit_attributes project %}">&larr; Back<a>
+
+{% endblock %}

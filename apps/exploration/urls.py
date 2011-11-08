@@ -4,7 +4,8 @@ urlpatterns = patterns("",
 	# Knowledge base urls
     url(r"^$", "exploration.views.knowledge_base", name="knowledge_base_index"),
     url(r"^import$", "exploration.views.import_context_view", name="import_context"),
-    url(r"^edit$", "exploration.views.edit_knowledge_base", name="edit_kb"),
+    url(r"^edit/objects$", "exploration.views.edit_knowledge_base", name="edit_kb"),
+    url(r"^edit/attributes$", "exploration.views.edit_attributes", name="edit_attributes"),
     url(r"^implications$", "exploration.views.implications", name="implications"),
     url(r"^export$", "exploration.views.export_context", name="export_context"),
     # Objects' urls
@@ -13,6 +14,7 @@ urlpatterns = patterns("",
     url(r"^object/(?P<id>\d+)/edit/$", "exploration.views.object_edit", name="object_edit"),
     # Attributes' urls
     url(r"^attribute/new/$", "exploration.views.attribute_new", name="attribute_new"),
+    url(r"^attribute/(?P<id>\d+)/edit/$", "exploration.views.attribute_edit", name="attribute_edit"),
     # AJAX
     url(r"^getintent$", "exploration.views.get_intent", name="get_intent"),
     url(r"^getpremise$", "exploration.views.get_premise", name="get_premise"),

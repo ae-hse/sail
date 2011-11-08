@@ -214,6 +214,7 @@ def object_edit(request, id, template_name="exploration/objects/edit.html"):
             form = ObjectForm(request.POST, instance=object_)
             if form.is_valid():
                 form.save()
+                ExplorationWrapper.touch(group)
             return HttpResponseRedirect(bridge.reverse('object_details', group, {"id" : object_.id}))
     else:
         form = ObjectForm(instance=object_)
@@ -227,8 +228,63 @@ def object_edit(request, id, template_name="exploration/objects/edit.html"):
                               data_dictionary,
                               context_instance=RequestContext(request, ctx))
 
+def attribute_edit(request, id, template_name="exploration/attributes/edit.html"):
+    group, bridge = group_and_bridge(request)
+    ctx = group_context(group, bridge)
+
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
+    
+    attr = get_object_or_404(FAttribute, pk=id)
+    if request.method == 'POST':
+        if 'delete' in request.POST:
+            attr.delete()
+            ExplorationWrapper.touch(group)
+            return HttpResponseRedirect(bridge.reverse('edit_attributes', group))
+        else:
+            form = AttributeForm(request.POST, instance=attr)
+            if form.is_valid():
+                form.save()
+                ExplorationWrapper.touch(group)
+            return HttpResponseRedirect(bridge.reverse('edit_attributes', group,))
+    else:
+        form = AttributeForm(instance=attr)
+    
+    data_dictionary = {
+        "attribute" : attr,
+        "project": group,
+        "form" : form
+    }
+    return render_to_response(template_name,
+                              data_dictionary,
+                              context_instance=RequestContext(request, ctx))
+
 @login_required                       
 def edit_knowledge_base(request, template_name="exploration/edit.html"):
+    """Edit knowledge base view"""
+    group, bridge = group_and_bridge(request)
+    ctx = group_context(group, bridge)
+
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
+    
+    objects, attributes = prepare_data_for_edit(group)
+    data_dictionary = {
+        "objects" : objects,
+        "attributes" : attributes,
+        "project" : group,
+    }
+    return render_to_response(template_name, 
+                              data_dictionary, 
+                              context_instance=RequestContext(request, ctx))
+
+
+@login_required                       
+def edit_attributes(request, template_name="exploration/attributes.html"):
     """Edit knowledge base view"""
     group, bridge = group_and_bridge(request)
     ctx = group_context(group, bridge)

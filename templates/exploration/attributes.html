@@ -1,0 +1,16 @@
+{% extends "exploration/base.html" %}
+
+{% load i18n %}
+{% load group_tags %}
+
+{% block head_title %}{% trans "Edit Attributes" %}{% endblock %}
+
+{% block body %}
+
+{% for attr in attributes %}
+<div id="{{ attr.pk }}" class="edit-attribute">
+  <h2>{{ attr.name }}</h2> <a href="{% groupurl attribute_edit project id=attr.id %}">Edit</a>
+</div>
+{% endfor %}
+
+{% endblock %}

@@ -81,6 +81,14 @@ function confirm_object_delete() {
 	}
 }
 
+// Confirm attributes' deletion
+function confirm_attribute_delete() {
+    var answer = confirm("Delete Attribute?")
+    if (answer) {
+        document.deleteForm.submit()
+    }
+}
+
 $("a.unconfirm-imp").click(function(event) {
 	event.preventDefault();
 	imp_pk = $(this).attr("id")
