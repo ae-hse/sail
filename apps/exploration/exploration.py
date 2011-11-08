@@ -140,8 +140,16 @@ class DBContext(fca.Context):
     def add_object_with_intent(self, intent, name):
         obj = FObject(name=name, group=self.group)
         obj.save()
-        get_attr = lambda name: self.group.content_objects(FAttribute).get(pk=name)
-        obj.attributes.add(*[get_attr(pk) for pk in intent])
+        if len(intent) != 0:
+            get_attr = lambda name: self.group.content_objects(FAttribute).get(pk=name)
+            obj.attributes.add(*[get_attr(pk) for pk in intent])
+
+    def add_attribute_with_extent(self, extent, name):
+        attr = FObject(name=name, group=self.group)
+        attr.save()
+        if len(extent) != 0:
+            get_obj = lambda name: self.group.content_objects(FObject).get(pk=name)
+            attr.fobject_set.add(*[get_obj(pk) for pk in extent])
 
 class WebExpert(object):
 
@@ -222,3 +230,11 @@ class ExplorationWrapper(object):
     @classmethod
     def edit_object(cls, group, object_, intent):
         cls.get_exploration(group).db.edit_example(object_, object_, intent)
+
+    @classmethod
+    def add_attribute(cls, group, attribute, extent):
+        cls.get_exploration(group).db.add_attribute(attribute, extent)
+
+    @classmethod
+    def touch(cls, group):
+        cls.get_exploration(group).db.touch()

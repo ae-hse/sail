@@ -179,6 +179,8 @@ def attribute_new(request, template_name="exploration/attributes/new.html"):
             if group:
                 group.associate(attribute, commit=False)
             attribute.save()
+            ExplorationWrapper.touch(group)
+
         return HttpResponseRedirect(bridge.reverse('knowledge_base_index', group))
     else:
         form = AttributeForm()
