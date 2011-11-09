@@ -3,9 +3,10 @@ from django.conf.urls.defaults import *
 urlpatterns = patterns("",
 	# Knowledge base urls
     url(r"^$", "exploration.views.knowledge_base", name="knowledge_base_index"),
+    url(r"^lattice$", "exploration.views.lattice", name="lattice"),
     url(r"^import$", "exploration.views.import_context_view", name="import_context"),
-    url(r"^edit/objects$", "exploration.views.edit_knowledge_base", name="edit_kb"),
-    url(r"^edit/attributes$", "exploration.views.edit_attributes", name="edit_attributes"),
+    url(r"^objects$", "exploration.views.edit_knowledge_base", name="edit_kb"),
+    url(r"^attributes$", "exploration.views.edit_attributes", name="edit_attributes"),
     url(r"^implications$", "exploration.views.implications", name="implications"),
     url(r"^export$", "exploration.views.export_context", name="export_context"),
     # Objects' urls
