@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import tempfile
+import os
+import subprocess
+from settings import MEDIA_ROOT
 
 import fca
+from fca.readwrite import uwrite_dot
 from fca.algorithms.exploration.exploration import (AttributeExploration, 
                                                     ExplorationDB)
 
@@ -102,11 +107,15 @@ class DBContext(fca.Context):
 
         self._implications = ImplicationsList()
 
-    def _get_self_as_fca_context(self):
+    def _get_self_as_fca_context(self, pk=True):
         objects = self.group.content_objects(FObject)
         attributes = self.group.content_objects(FAttribute)
-        object_names = [obj.pk for obj in objects]
-        attribute_names = [attr.pk for attr in attributes]
+        if pk:
+            object_names = [obj.pk for obj in objects]
+            attribute_names = [attr.pk for attr in attributes]
+        else:
+            object_names = [obj.name for obj in objects]
+            attribute_names = [attr.name for attr in attributes]
         table = []
         for obj in objects:
             table.append(obj.get_as_boolean_list(self.group))
@@ -183,6 +192,25 @@ class ExplorationWrapper(object):
     _explorations = {}
 
     @classmethod
+    def save_lattice(cls, group):
+        temp_dot_path = tempfile.mktemp()
+        dir_path = os.path.join(MEDIA_ROOT, "img", group.slug)
+        
+        cxt = cls._explorations[group].db._cxt._get_self_as_fca_context(pk=False)
+
+        concept_system = fca.ConceptLattice(cxt)
+        uwrite_dot(concept_system, temp_dot_path, full=True)
+        
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+        
+        png_path = os.path.join(dir_path, "lattice.png")
+        
+        subprocess.call(["dot", "-Tpng", 
+                        "-o{0}".format(png_path),
+                        temp_dot_path])
+
+    @classmethod
     def clear(cls):
         cls._explorations.clear()
 
@@ -222,6 +250,7 @@ class ExplorationWrapper(object):
     def reject_implication_with_counterexample(cls, group, imp_pk, example, intent):
         cls.get_exploration(group).expert.set_counterexample(example, intent)
         cls.get_exploration(group).reject_implication(imp_pk)
+        cls.save_lattice(group)
 
     @classmethod
     def get_background_knowledge(cls, group):
@@ -230,11 +259,14 @@ class ExplorationWrapper(object):
     @classmethod
     def edit_object(cls, group, object_, intent):
         cls.get_exploration(group).db.edit_example(object_, object_, intent)
+        cls.save_lattice(group)
 
     @classmethod
     def add_attribute(cls, group, attribute, extent):
         cls.get_exploration(group).db.add_attribute(attribute, extent)
+        cls.save_lattice(group)
 
     @classmethod
     def touch(cls, group):
         cls.get_exploration(group).db.touch()
+        cls.save_lattice(group)

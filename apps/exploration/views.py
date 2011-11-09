@@ -495,3 +495,20 @@ def export_context(request):
     response.write(get_csv(group))
     
     return response
+
+@login_required
+def lattice(request, template_name="exploration/lattice.html"):
+    group, bridge = group_and_bridge(request)
+    ctx = group_context(group, bridge)
+
+    is_member = group.user_is_member(request.user)
+
+    if not is_member:
+        return HttpResponseForbidden("You must be a project member to do this")
+
+    data_dictionary = {
+        "project" : group,
+    }
+    return render_to_response(template_name, 
+                              data_dictionary, 
+                              context_instance=RequestContext(request, ctx))
