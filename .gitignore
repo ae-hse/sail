@@ -27,6 +27,7 @@ pip-log.txt
 .mr.developer.cfg
 
 dev.db
+site_media
 
 # profiler
 *.prof
