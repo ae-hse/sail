@@ -3,7 +3,7 @@
 import tempfile
 import os
 import subprocess
-from settings import MEDIA_ROOT
+from sail.settings import MEDIA_ROOT
 
 import fca
 from fca.readwrite import uwrite_dot
