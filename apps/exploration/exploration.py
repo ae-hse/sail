@@ -204,10 +204,10 @@ class ExplorationWrapper(object):
         if not os.path.exists(dir_path):
             os.makedirs(dir_path)
         
-        png_path = os.path.join(dir_path, "lattice.png")
+        svg_path = os.path.join(dir_path, "lattice.svg")
         
-        subprocess.call(["dot", "-Tpng", 
-                        "-o{0}".format(png_path),
+        subprocess.call(["dot", "-Tsvg", 
+                        "-o{0}".format(svg_path),
                         temp_dot_path])
 
     @classmethod
