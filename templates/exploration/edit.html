@@ -13,8 +13,11 @@
     <a id="show-attributes" href="#">Show/hide attributes</a>&nbsp;<a href="{% groupurl object_edit project id=obj.id %}">Edit</a>
   <div style="display: none" class="edit-attributes">
     {% for attr in attributes %}
+	<div class="attribute-checkbox">
       <input type="checkbox" name="{{ obj.pk }}" value="{{ attr.pk }}" />{{ attr.name }}</br>
+	</div>
     {% endfor %}
+	<a id="show-more-attributes" href="#">More...</a> </br>
     <input type="submit" name="save" value="Submit" id="{{ obj.pk }}"/>
   </div>
 </div>

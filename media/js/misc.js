@@ -1,4 +1,14 @@
 // Edit Object
+$("div.edit-attributes a#show-more-attributes").click(function(event) {
+	event.preventDefault();
+	
+	var obj_div = $(this).parent("div.edit-attributes");
+	
+	obj_div.children("div.attribute-checkbox").slideDown();
+	
+	obj_div.children("a#show-more-attributes").hide();
+});
+	
 $("div.edit-object a#show-attributes").click(function(event) {
 	event.preventDefault();
 	
@@ -6,15 +16,19 @@ $("div.edit-object a#show-attributes").click(function(event) {
 	var obj_pk = obj_div.attr("id");
 	$.post("getintent", {pk: obj_pk},
 		function(data) {
-			$(obj_div).children("div").children("input:checkbox").each(function(index) {
-				if (data.indexOf(parseInt($(this).attr("value"))) != -1) {
-					$(this).prop("checked", true)
+			$(obj_div).children("div").children("div.attribute-checkbox").each(function(index) { //children("input:checkbox").each(function(index) {
+				if (data.indexOf(parseInt($(this).children("input:checkbox").attr("value"))) != -1) {
+					$(this).children("input:checkbox").prop("checked", true)
+				}
+				else {
+					$(this).hide();
 				}
 			});
 		}
 	);
-
-	obj_div.children("div.edit-attributes").slideToggle();
+    
+	obj_div.children("div.edit-attributes").children("a#show-more-attributes").show();
+	obj_div.children("div.edit-attributes").slideToggle("fast");
 	
 	var submit_btn = $(obj_div).children("div").children("input:submit");
 	// Submit new intent while user is waiting for response
@@ -33,9 +47,9 @@ $("div.edit-object a#show-attributes").click(function(event) {
 		
 		var intent = new Array();
 
-		$(obj_div).children("div").children("input:checkbox").each(function(index) {
-			if ($(this).prop("checked")) {
-				intent.push($(this).attr("value"));
+		$(obj_div).children("div").children("div.attribute-checkbox").each(function(index) {// children("input:checkbox").each(function(index) {
+			if ($(this).children("input:checkbox").prop("checked")) {
+				intent.push($(this).children("input:checkbox").attr("value"));
 			}
 		});
 
