@@ -20,10 +20,8 @@ $("div.edit-object span#show-attributes").click(function(event) {
 		function(data) {
 			$(obj_div).children("div").children("div.attribute-checkbox").each(function(index) { //children("input:checkbox").each(function(index) {
 				if (data.indexOf(parseInt($(this).children("input:checkbox").attr("value"))) != -1) {
-					$(this).children("input:checkbox").prop("checked", true)
-				}
-				else {
-					$(this).hide();
+					$(this).children("input:checkbox").prop("checked", true);
+                    $(this).show();
 				}
 			});
 		}

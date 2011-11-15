@@ -17,7 +17,7 @@
 
   <div style="display: none" class="edit-attributes">
     {% for attr in attributes %}
-	<div class="attribute-checkbox">
+	<div style="display: none" class="attribute-checkbox">
       <input type="checkbox" name="{{ obj.pk }}" value="{{ attr.pk }}" />{{ attr.name }}</br>
 	</div>
     {% endfor %}
