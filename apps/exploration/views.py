@@ -10,9 +10,15 @@ import urllib
 import datetime
 
 from forms import ObjectForm, AttributeForm
-from models import FObject, FAttribute
+from models import FObject, FAttribute, AttributeImplication
 from misc import import_context, prepare_data_for_edit, get_csv
 from exploration import ExplorationWrapper
+
+from django.conf import settings
+if "notification" in settings.INSTALLED_APPS:
+    from notification import models as notification
+else:
+    notification = None
 
 # Uncomment next line if you want to use profiler
 # from utils.profiler import profile
@@ -100,6 +106,7 @@ def import_context_view(request, template_name="exploration/import.html"):
             if request.user.is_authenticated():
                 import_context(group, request.FILES['import_context'])
                 transaction.commit()
+                ExplorationWrapper.touch(group)
             else:
                 # TODO: Show message
                 pass
@@ -147,6 +154,12 @@ def object_new(request, template_name="exploration/objects/new.html"):
                 group.associate(object_, commit=False)
             object_.save()
             ExplorationWrapper.touch(group)
+            if notification:
+                notification.send(group.member_users.all(), "context_new_object", {
+                    "user": request.user,
+                    "new_object": object_,
+                    "project" : group,
+                })
             return HttpResponseRedirect(bridge.reverse('object_details', group, {"id" : object_.id}))
         else:
             # TODO: Possibly validation error handling
@@ -181,6 +194,12 @@ def attribute_new(request, template_name="exploration/attributes/new.html"):
                 group.associate(attribute, commit=False)
             attribute.save()
             ExplorationWrapper.touch(group)
+            if notification:
+                notification.send(group.member_users.all(), "context_new_attribute", {
+                    "user": request.user,
+                    "new_attribute": attribute,
+                    "project" : group,
+                })
         return HttpResponseRedirect(bridge.reverse('knowledge_base_index', group))
     else:
         form = AttributeForm()
@@ -207,8 +226,15 @@ def object_edit(request, id, template_name="exploration/objects/edit.html"):
     object_ = get_object_or_404(FObject, pk=id)
     if request.method == 'POST':
         if 'delete' in request.POST:
+            object_name = object_.name
             object_.delete()
             ExplorationWrapper.touch(group)
+            if notification:
+                notification.send(group.member_users.all(), "context_remove_object", {
+                    "user": request.user,
+                    "object_name": object_name,
+                    "project" : group,
+                })
             return HttpResponseRedirect(bridge.reverse('edit_kb', group))
         else:
             form = ObjectForm(request.POST, instance=object_)
@@ -240,8 +266,15 @@ def attribute_edit(request, id, template_name="exploration/attributes/edit.html"
     attr = get_object_or_404(FAttribute, pk=id)
     if request.method == 'POST':
         if 'delete' in request.POST:
+            attr_name = attr.name
             attr.delete()
             ExplorationWrapper.touch(group)
+            if notification:
+                notification.send(group.member_users.all(), "context_remove_attribute", {
+                    "user": request.user,
+                    "attribute_name": attr_name,
+                    "project" : group,
+                })
             return HttpResponseRedirect(bridge.reverse('edit_attributes', group))
         else:
             form = AttributeForm(request.POST, instance=attr)
@@ -409,6 +442,13 @@ def submit_intent(request):
             status = 'ok'
         except Exception as details:
             status = str(details)
+        else:
+            if notification:
+                notification.send(group.member_users.all(), "intent_changed", {
+                    "user": request.user,
+                    "object": FObject.objects.get(pk=object_pk),
+                    "project" : group,
+                })
         return HttpResponse(simplejson.dumps({'status' : status}, ensure_ascii=False), 
                             mimetype='application/json')
     else:
@@ -427,10 +467,17 @@ def confirm_implication(request):
     if request.method == 'POST':
         pk = request.POST['pk']
         try:
-            ExplorationWrapper.confirm_implication(group, int(pk))
+            implication = ExplorationWrapper.confirm_implication(group, int(pk))
         except KeyError:
             # TODO: Relative basis was changed. Show message.
             pass
+        else:
+            if notification:
+                notification.send(group.member_users.all(), "attr_imp_conf", {
+                    "user": request.user,
+                    "implication": implication,
+                    "project" : group,
+                })
         return HttpResponseRedirect(bridge.reverse('implications', group))
     else:
         raise Http404
@@ -446,7 +493,14 @@ def unconfirm_implication(request):
 
     if request.method == 'POST':
         pk = request.POST['pk']
+        implication = AttributeImplication.objects.get(pk=pk).get_as_fca_implication()
         ExplorationWrapper.unconfirm_implication(group, pk)
+        if notification:
+                notification.send(group.member_users.all(), "attr_imp_unconf", {
+                    "user": request.user,
+                    "implication": implication,
+                    "project" : group,
+                })
         return HttpResponseRedirect(bridge.reverse('implications', group))
     else:
         raise Http404
@@ -475,6 +529,13 @@ def reject_implication(request):
             status = 'ok'
         except Exception as details:
             status = str(details)
+        else:
+            if notification:
+                notification.send(group.member_users.all(), "attr_imp_reject", {
+                    "user": request.user,
+                    "project" : group,
+                    "counterexample_name" : object_name,
+                })
         return HttpResponse(simplejson.dumps({'status' : status}, ensure_ascii=False), 
                             mimetype='application/json')
     else:

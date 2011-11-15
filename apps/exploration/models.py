@@ -3,6 +3,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 
+import fca
+
 class FAttribute(models.Model):
     """FObject stands for formal object"""
     name = models.CharField(_('name'), max_length=200, blank=False)
@@ -76,3 +78,7 @@ class AttributeImplication(models.Model):
         
     def get_conclusion(self):
         return set([attr.pk for attr in self.conclusion.all()])
+
+    def get_as_fca_implication(self):
+        return fca.Implication(set([attr.name for attr in self.premise.all()]), 
+                               set([attr.name for attr in self.conclusion.all()]))

@@ -1,0 +1,5 @@
+{% load account_tags %}
+
+{% with project.get_absolute_url as project_url %}
+User <a href="{% url profile_detail new_member.username %}">{% user_display new_member %}</a> was added to the project <a href="{{ project_url }}">{{ project.name }}</a>
+{% endwith %}

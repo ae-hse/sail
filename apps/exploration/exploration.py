@@ -179,6 +179,7 @@ class WebExploration(AttributeExploration):
     def confirm_implication(self, imp_pk):
         imp = self.db.open_implications[imp_pk]
         super(WebExploration, self).confirm_implication(imp)
+        return imp
 
     def unconfirm_implication(self, imp_pk):
         super(WebExploration, self).unconfirm_implication(AttributeImplication.objects.get(pk=imp_pk))
@@ -232,7 +233,7 @@ class ExplorationWrapper(object):
 
     @classmethod
     def confirm_implication(cls, group, imp_pk):
-        cls.get_exploration(group).confirm_implication(imp_pk)
+        return cls.get_exploration(group).confirm_implication(imp_pk)
 
     @classmethod
     def get_premise(cls, group, imp_pk):
