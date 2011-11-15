@@ -60,7 +60,7 @@ def create(request, form_class=ProjectForm, template_name="projects/create.html"
 
 def projects(request, template_name="projects/projects.html"):
     
-    projects = Project.objects.all()
+    projects = Project.objects.filter(member_users=request.user).order_by("name")
     
     search_terms = request.GET.get("search", "")
     if search_terms:
