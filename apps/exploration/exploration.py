@@ -206,10 +206,13 @@ class ExplorationWrapper(object):
             os.makedirs(dir_path)
         
         svg_path = os.path.join(dir_path, "lattice.svg")
-        
-        subprocess.call(["dot", "-Tsvg", 
-                        "-o{0}".format(svg_path),
-                        temp_dot_path])
+        try:
+            subprocess.call(["dot", "-Tsvg", 
+                            "-o{0}".format(svg_path),
+                            temp_dot_path])
+        except:
+            # TODO: workaround for windows systems
+            pass
 
     @classmethod
     def clear(cls):
