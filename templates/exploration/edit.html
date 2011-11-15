@@ -9,8 +9,12 @@
 
 {% for obj in objects %}
 <div id="{{ obj.pk }}" class="edit-object">
-  <h2>{{ obj.name }}</h2>
-    <a id="show-attributes" href="#">Show/hide attributes</a>&nbsp;<a href="{% groupurl object_edit project id=obj.id %}">Edit</a>
+
+  <div class="edit-object-header">
+  <span id="show-attributes">{{ obj.name }}</span>
+  <a href="{% groupurl object_edit project id=obj.id %}"><img width="16" height="16" src="{{ STATIC_URL }}img/pencil.png" alter="Edit"/></a>
+  </div>
+
   <div style="display: none" class="edit-attributes">
     {% for attr in attributes %}
 	<div class="attribute-checkbox">

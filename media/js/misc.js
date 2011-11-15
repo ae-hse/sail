@@ -9,10 +9,12 @@ $("div.edit-attributes a#show-more-attributes").click(function(event) {
 	obj_div.children("a#show-more-attributes").hide();
 });
 	
-$("div.edit-object a#show-attributes").click(function(event) {
+$("div.edit-object span#show-attributes").click(function(event) {
 	event.preventDefault();
+
+    $(this).toggleClass("collapsed");
 	
-	var obj_div = $(this).parent("div.edit-object");
+	var obj_div = $(this).parent("div.edit-object-header").parent("div.edit-object");
 	var obj_pk = obj_div.attr("id");
 	$.post("getintent", {pk: obj_pk},
 		function(data) {
