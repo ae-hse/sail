@@ -13,8 +13,23 @@
     
     <p>
         {% blocktrans %}
-        The purpose of this website is to provide a platform for collaborative 
-        ontologies construction.
+        Domain ontologies are essential in disciplines as diverse as software engineering, medicine, or political science to name just a few. This website is an ongoing implementation of the methodology for collaborative ontology construction by geographically spread communities of experts. A distinctive feature of the proposed approach is the use of conceptual exploration techniques, which make it possible to organize the process of ontology construction by automatically identifying and explicitly highlighting issues that remain to be addressed. Given a set of objects (facts, situations, etc.) of a subject domain, which is known to have considerably more such objects, and their unified descriptions in terms of presence or absence of certain attributes, a conceptual exploration system maintains a compact representation of implications behind the currently built ontology and offers them for experts to accept or falsify by entering new objects or extending the description language with new attributes. Upon termination, exploration results in identification of a (relatively small) representative part of the domain, from which a conceptual hierarchy of the entire domain can be automatically constructed.
+        {% endblocktrans %}
+    </p>
+
+    <p>
+        {% blocktrans %}
+        The proposed approach is based on <a href="http://www.upriss.org.uk/fca/">formal concept analysis</a>, a mathematical theory oriented at applications in knowledge representation, knowledge acquisition, data analysis and visualization. It provides tools for understanding the structure of data given as a set of objects with certain descriptions, e.g., in terms of their attributes, which is done by representing the data as a hierarchy of concepts, or more exactly, a concept lattice (in the sense of lattice theory). The objects, attributes, and relation between them constitute a formal context; hence, the definition of a concept is necessarily contextual. Every concept has extent (the set of objects that fall under the concept) and intent (the set of attributes or features that together are necessary and sufficient for an object to be an instance of the concept). Concepts are ordered in terms of being more general or less general (i.e., covering more objects or fewer objects).
+        {% endblocktrans %}
+    </p>
+
+    <p>
+        {% blocktrans %}
+        <h2>Further Reading</h2>
+        <ul>
+        <li>Ganter, B. & Wille, R. (1999), Formal Concept Analysis: Mathematical Foundations, Springer, Berlin/Heidelberg.</li>
+        <li>Ganter, B. (1999), ‘Attribute exploration with background knowledge’, Theoretical Computer Science 217(2), 215–233.</li>
+        </ul>
         {% endblocktrans %}
     </p>
 
@@ -27,6 +42,9 @@
         {% ifsetting ACCOUNT_OPEN_SIGNUP %}
             {% url acct_signup as signup_url %}
             <p>{% blocktrans %}You can <a href="{{ signup_url }}">Sign up</a> and <a href="{{ login_url }}">Log in</a> to try out the site.{% endblocktrans %}</p>
+            <p>
+            Alternatively, you can log in as test user (username/password: test/test) to examine some test projects.
+            </p>
         {% else %}
             <p>{% blocktrans %}You can <a href="{{ login_url }}">Log in</a> to try out the site.{% endblocktrans %}</p>
         {% endifsetting %}
