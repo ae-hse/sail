@@ -1,7 +1,7 @@
 {% extends "site_base.html" %}
 
-{% load i18n %}
-{% load ifsetting_tag %}
+{% load i18n %} 
+{% load ifsetting_tag %} 
 
 {% block head_title %}{% trans "What Next?" %}{% endblock %}
 
@@ -17,6 +17,9 @@
             
             <dt><a href="{% url profile_detail user.username %}">fill out your profile</a></dt>
             <dd>to tell the world a little about yourself.</dd>
+            
+            <dt><a href="{% url tutor_create_project %}">read the tutor</a></dt>
+            <dd>to continue your acquaintance.<dd>
             
             {% ifsetting ACCOUNT_OPEN_SIGNUP %}
             {% else %}

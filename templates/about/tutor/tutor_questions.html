@@ -1,0 +1,13 @@
+{% extends "about/tutor_base.html" %}
+{% block tutor_header %}Exploration{% endblock tutor_header %}
+{% block tutor_content %}
+    <p>    
+Теперь позволим системе искать зависимости между признаками. Перейдем по вкладке <b>Questions</b>. Система все выявленные зависимости выстраивает в виде логических утверждений. Нам остается либо соглашаться с ними, либо опровергать их добавлением нового контр-примера.  Например, система выявила зависимость «если монархия, то НАТО», мы знаем, что это не так и опровергаем это утверждение, добавляя новый объект и признаки к нему. Утверждения, получившие положительный ответ, будут отображаться сверху под заголовком <b>Known Facts</b>. 
+        <img src="{{ STATIC_URL }}samples/question.jpg" align = "middle" name="Main Page" vspace="10" width="100%">
+        <TABLE width="100%">
+        <TD width="33%">Вернуться <a href="{% url tutor_lattice %}" > назад </a></TD>
+        <TD ALIGN="center" width="33%"><a href="{% url tutor_contents %}" > Оглавление </a></TD>
+        <td width="33%"></td>
+        </TABLE>
+    </p>
+{% endblock tutor_content %}

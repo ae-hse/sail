@@ -1,0 +1,14 @@
+{% extends "about/tutor_base.html" %}
+{% block tutor_header %}Ассоциирование признаков{% endblock tutor_header %}
+{% block tutor_content %}
+    <p>    
+Для начала работы системы нам необходимо привязать признаки к соответствующим им объектам.
+Для этого перейдем по вкладке <b>Objects</b>. Здесь представлены все наши объекты. Раскройте список напротив интересующего Вас объекта и нажмите на ссылку <b>More..</b> Вы увидите все добавленные признаки. Поставьте флажки напротив признаков, присущих этому объекту. Когда закончите, нажмите кнопку <b>Submit</b>, и признаки будут сохранены. Эту работу необходимо проделать с каждым объектом, у которого есть хотя бы один признак.
+        <img src="{{ STATIC_URL }}samples/objects.jpg" align = "middle" name="Main Page" vspace="10">
+        <TABLE width="100%">
+        <TD width="33%">Вернуться <a href="{% url tutor_filling_base %}" > назад </a></TD>
+        <TD ALIGN="center" width="33%"><a href="{% url tutor_contents %}" > Оглавление </a></TD>
+        <TD ALIGN="right"> <a href="{% url tutor_lattice %}" > Следующая страница </a></TD>
+        </TABLE>
+    </p>
+{% endblock tutor_content %}

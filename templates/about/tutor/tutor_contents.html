@@ -1,0 +1,15 @@
+{% extends "about/tutor_base.html" %}
+{% block tutor_header %}Содержание{% endblock tutor_header %}
+{% block tutor_content %}
+    <p>    
+	<dl>
+	<dt>- <a href="{% url tutor_create_project %}" >Создание нового проекта</a></dt>
+	<dt>- <a href="{% url tutor_main_page %}" >Главная страница проекта</a></dt>
+	<dt>- <a href="{% url tutor_knowledge_base %}" >База знаний</a></dt>
+	<dt>- <a href="{% url tutor_filling_base %}" >Наполнение базы</a></dt>
+	<dt>- <a href="{% url tutor_link_objects %}" >Ассоциирование признаков</a></dt>
+	<dt>- <a href="{% url tutor_lattice %}" >Решетка понятий</a></dt>
+	<dt>- <a href="{% url tutor_questions %}" >Exploration</a></dt>
+	</dl>
+    </p>
+{% endblock tutor_content %}

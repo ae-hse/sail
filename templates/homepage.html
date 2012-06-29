@@ -22,7 +22,10 @@
         The proposed approach is based on <a href="http://www.upriss.org.uk/fca/">formal concept analysis</a>, a mathematical theory oriented at applications in knowledge representation, knowledge acquisition, data analysis and visualization. It provides tools for understanding the structure of data given as a set of objects with certain descriptions, e.g., in terms of their attributes, which is done by representing the data as a hierarchy of concepts, or more exactly, a concept lattice (in the sense of lattice theory). The objects, attributes, and relation between them constitute a formal context; hence, the definition of a concept is necessarily contextual. Every concept has extent (the set of objects that fall under the concept) and intent (the set of attributes or features that together are necessary and sufficient for an object to be an instance of the concept). Concepts are ordered in terms of being more general or less general (i.e., covering more objects or fewer objects).
         {% endblocktrans %}
     </p>
-
+    {% url tutor_create_project as tutor_create_project_url %}
+		{% blocktrans %}
+		For further acquaintance with the web site please read the <a href="{{ tutor_create_project_url }}" >tutorial</a>.
+		{% endblocktrans %}
     <p>
         {% blocktrans %}
         <h2>Further Reading</h2>

@@ -1,0 +1,24 @@
+{% extends "about/tutor_base.html" %}
+{% block tutor_header %}Создание нового проекта{% endblock tutor_header %}
+{% block tutor_content %}
+        <p>
+        Продолжим ознакомление с процессом создания Вашего первого проекта. Чтобы создать проект, перейдите по вкладке <b>Projects</b> в верхнем правом углу. Заполните следующие поля:
+        <dl>
+            <dt>- Name </dt>
+            <dd>Имя вашего проекта</dd>
+            <dt>- Slug </dt>
+            <dd>Сокращенное имя, присваиваемое системой Вашему проекту</dd>
+            <dt>- Description</dt>
+            <dd>Описание Вашего проекта</dd>
+            
+        </dl>
+        <p>Нажмите <b>Create</b>, чтобы завершить создание нового проекта</p>
+        Если Вы захотите изменить введенные данные, Вы всегда сможете вернуться и исправить эти поля. Чтобы показать возможности системы, мы будем рассматривать проект, исследующий зависимости в признаках стран европейского континента.
+        <img src="{{ STATIC_URL }}samples/new_project.jpg" align = "middle" name="New Project" vspace="10">
+		<TABLE width="100%">
+        <TD width="33%"></TD>
+        <TD ALIGN="center" width="33%"><a href="{% url tutor_contents %}" > Оглавление </a></TD>
+        <td align="right"> <a href="{% url tutor_main_page %}" > Следующая страница </a></td>
+        </TABLE>
+        </p>
+{% endblock tutor_content %}

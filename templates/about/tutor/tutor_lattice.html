@@ -1,0 +1,13 @@
+{% extends "about/tutor_base.html" %}
+{% block tutor_header %}Решетка понятий{% endblock tutor_header %}
+{% block tutor_content %}
+    <p>    
+	Ну, вот первый этап пройден. Можем посмотреть первый результаты работы во вкладке <b>Lattice</b>. Здесь мы увидим решетку понятий, составленную из элементов нашей базы знаний. Можно проследить иерархию, сложившуюся между понятиями. 
+        <img src="{{ STATIC_URL }}samples/example.jpg" align = "middle" name="Main Page" vspace="10">
+        <TABLE width="100%">
+        <TD width="33%">Вернуться <a href="{% url tutor_link_objects %}" > назад </a></TD>
+        <TD ALIGN="center" width="33%"><a href="{% url tutor_contents %}" > Оглавление </a></TD>
+        <TD ALIGN="right"> <a href="{% url tutor_questions %}" > Следующая страница </a></TD>
+        </TABLE>
+    </p>
+{% endblock tutor_content %}
